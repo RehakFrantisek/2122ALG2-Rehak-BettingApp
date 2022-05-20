@@ -1,6 +1,9 @@
 package app;
 
+import utils.FileUtils;
+
 import java.util.ArrayList;
+import java.io.*;
 
 public class BetCompany {
     public String name;
@@ -20,5 +23,19 @@ public class BetCompany {
 
     public void addUser(User user){
         this.users.add(user);
+        FileUtils.appendToFile("data//"+user.getUsername()+"//login.csv",user.toString());
+    }
+
+    public void loadUsers(){
+
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (User user: this.users) {
+            sb.append(user.toString()).append("\n");
+        }
+        return sb.toString();
     }
 }

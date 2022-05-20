@@ -3,10 +3,14 @@ package ui;
 
 import app.User;
 import utils.FileUtils;
+import utils.UsersUtils;
 import app.BetCompany;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class UI {
 
@@ -19,11 +23,12 @@ public class UI {
 
     public void mainPage(){
         System.out.println();
-        System.out.println(" BETTER ");
-        System.out.println(" - APP - ");
+        System.out.println(this.betCompany.getName());
+        System.out.println("- APP -");
     }
 
-    public void intro(){
+    public void intro() throws IOException {
+        betCompany.loadUsers();
         while(true){
             System.out.println();
             System.out.println("1) login");
@@ -54,9 +59,10 @@ public class UI {
         System.out.println("Password");
     }
 
-    public void register(){
+    public void register() throws IOException {
         System.out.println("Username");
         String username = sc.next();
+        UsersUtils.checkUsername(username);
         System.out.println("Personal_ID");
         int PID = sc.nextInt();
         System.out.println("Password");
@@ -65,14 +71,16 @@ public class UI {
         int cardnumber = sc.nextInt();
         System.out.println("CVC code");
         int cvc = sc.nextInt();
-        ArrayList<User> account = new ArrayList<>();
+        //ArrayList<User> account = new ArrayList<>();
         User reguser = new User(username,PID,password,cardnumber,cvc);
-        BetCompany.addUser(reguser);
-        FileUtils.createFolder();
-        FileUtils.createFile(username);
+        //System.out.println(this.betCompany.toString());
+        FileUtils.createData();
+        FileUtils.createFolder(username);
+        FileUtils.createFile(username, "login.csv");
+        this.betCompany.addUser(reguser);
     }
 
-    public void quit(){
+    public void quit() throws IOException {
         while(true){
             System.out.println("Are you sure to quit?");
             System.out.println("Press Y for quit");

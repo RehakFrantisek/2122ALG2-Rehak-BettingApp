@@ -1,12 +1,21 @@
 package ui;
 
 
-import utils.File;
+import app.User;
+import utils.FileUtils;
+import app.BetCompany;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UI {
+
+    private BetCompany betCompany;
     private Scanner sc = new Scanner(System.in);
+
+    public UI(BetCompany betCompany){
+        this.betCompany = betCompany;
+    }
 
     public void mainPage(){
         System.out.println();
@@ -56,7 +65,11 @@ public class UI {
         int cardnumber = sc.nextInt();
         System.out.println("CVC code");
         int cvc = sc.nextInt();
-        File.createFolder(username);
+        ArrayList<User> account = new ArrayList<>();
+        User reguser = new User(username,PID,password,cardnumber,cvc);
+        BetCompany.addUser(reguser);
+        FileUtils.createFolder();
+        FileUtils.createFile(username);
     }
 
     public void quit(){

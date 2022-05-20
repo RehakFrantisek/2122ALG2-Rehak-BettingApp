@@ -14,12 +14,22 @@ public class User {
         this.cardnumber = cardnumber;
         this.cvc = cvc;
     }
-
     public String getUsername() {
         return username;
     }
 
     public int getPID() {
         return PID;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", PID=" + PID +
+                ", password='" + password + '\'' +
+                ", cardnumber=" + cardnumber +
+                ", cvc=" + cvc +
+                '}';
     }
 }

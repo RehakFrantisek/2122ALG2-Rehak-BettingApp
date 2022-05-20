@@ -1,10 +1,14 @@
 package ui;
 
 
-public class Main {
-    public static void main(String[] args) {
+import app.BetCompany;
 
-        UI ui = new UI();
+public class Main {
+
+    public static final String betCompanyName = "Better";
+    public static void main(String[] args) {
+        BetCompany betCompany = new BetCompany(betCompanyName);
+        UI ui = new UI(betCompany);
         ui.mainPage();
         ui.intro();
     }

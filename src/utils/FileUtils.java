@@ -8,7 +8,7 @@ public class FileUtils {
     public static void createData(){
         File folder = new File("data");
         if(folder.exists()){
-            System.out.println("File exists");
+            System.out.println("Folder data exists");
         }
         else {
             folder.mkdir();
@@ -20,7 +20,7 @@ public class FileUtils {
     public static void createFolder(String foldername){
         File folder = new File("data//"+foldername);
         if(folder.exists()){
-            System.out.println("Folder exists");
+            System.out.println("Folder 'username' exists");
         }
         else {
             folder.mkdir();

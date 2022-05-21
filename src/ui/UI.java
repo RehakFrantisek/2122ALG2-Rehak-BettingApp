@@ -64,8 +64,13 @@ public class UI {
     public void register() throws IOException {
         System.out.println("Username");
         String username = sc.next();
+        if(!betCompany.checkUsername(username)){
+            while(!betCompany.checkUsername(username)){
+                System.out.println("Username taken, choose another");
+                username = sc.next();
+            }
+        }
         //TODO
-        UsersUtils.checkUsername(username);
         System.out.println("Personal_ID");
         int PID = sc.nextInt();
         System.out.println("Password");

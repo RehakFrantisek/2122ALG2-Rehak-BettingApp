@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.*;
+import java.util.Scanner;
 
 public class FileUtils {
 
@@ -19,7 +20,7 @@ public class FileUtils {
     public static void createFolder(String foldername){
         File folder = new File("data//"+foldername);
         if(folder.exists()){
-            System.out.println("File exists");
+            System.out.println("Folder exists");
         }
         else {
             folder.mkdir();
@@ -28,10 +29,10 @@ public class FileUtils {
         }
     }
 
-    public static void createFile(String foldername, String filename) throws IOException {
-        File file = new File("data//"+foldername+"//"+filename);
+    public static void createFile(String filename) throws IOException {
+        File file = new File("data//"+filename);
         if(file.exists()){
-            System.out.println("User exists");
+            System.out.println("File login exists");
         }
         else {
             file.createNewFile();
@@ -44,7 +45,7 @@ public class FileUtils {
     {
         try
         {
-            PrintWriter csvWriter = new PrintWriter(filename);
+            FileWriter csvWriter = new FileWriter(filename, true);
             StringBuilder sb = new StringBuilder();
             sb.append(input);
             sb.append("\n");
@@ -56,4 +57,23 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
+
+    public static String[] readCSV(String filepath){
+        String data = "";
+        try {
+            File myObj = new File(filepath);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                data += myReader.nextLine() + "\n";
+                //System.out.println(data);
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("readCSV error");
+            e.printStackTrace();
+        }
+        //System.out.println(data);
+        return data.split("\n");
+    }
+
 }

@@ -29,6 +29,7 @@ public class UI {
 
     public void intro() throws IOException {
         betCompany.loadUsers();
+        //System.out.println(betCompany.toString());
         while(true){
             System.out.println();
             System.out.println("1) login");
@@ -57,11 +58,13 @@ public class UI {
     public void login(){
         System.out.println("Username");
         System.out.println("Password");
+        //TODO
     }
 
     public void register() throws IOException {
         System.out.println("Username");
         String username = sc.next();
+        //TODO
         UsersUtils.checkUsername(username);
         System.out.println("Personal_ID");
         int PID = sc.nextInt();
@@ -76,7 +79,7 @@ public class UI {
         //System.out.println(this.betCompany.toString());
         FileUtils.createData();
         FileUtils.createFolder(username);
-        FileUtils.createFile(username, "login.csv");
+        FileUtils.createFile("login.csv");
         this.betCompany.addUser(reguser);
     }
 
@@ -89,6 +92,7 @@ public class UI {
             switch(option){
                 case "Y":
                     return;
+                    //TODO repair
                 case "N":
                     intro();
                     break;

@@ -24,12 +24,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", PID=" + PID +
-                ", password='" + password + '\'' +
-                ", cardnumber=" + cardnumber +
-                ", cvc=" + cvc +
-                '}';
+        return username+";"+PID+";"+password+";"+cardnumber+";"+cvc;
     }
 }

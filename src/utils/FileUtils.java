@@ -5,12 +5,9 @@ import java.util.Scanner;
 
 public class FileUtils {
 
-    public static void createData(){
+    public static void createData() {
         File folder = new File("data");
-        if(folder.exists()){
-            System.out.println("Folder data exists");
-        }
-        else {
+        if(!folder.exists()){
             folder.mkdir();
             //System.out.println(folder + " created");
             //System.out.println("File doesnt exists");
@@ -19,25 +16,25 @@ public class FileUtils {
 
     public static void createFolder(String foldername){
         File folder = new File("data//"+foldername);
-        if(folder.exists()){
-            System.out.println("Folder 'username' exists");
-        }
-        else {
+        if(!folder.exists()){
             folder.mkdir();
             //System.out.println(folder + " created");
             //System.out.println("File doesnt exists");
         }
+        else {
+            System.out.println("Folder 'username' exists");
+        }
     }
 
-    public static void createFile(String filename) throws IOException {
-        File file = new File("data//"+filename);
-        if(file.exists()){
-            System.out.println("File login exists");
-        }
-        else {
+    public static void createFile(String filename, String data) throws IOException {
+        File file = new File(data+"//"+filename);
+        if(!file.exists()){
             file.createNewFile();
             //System.out.println(filename + " created");
             //System.out.println("doesnt exists");
+        }
+        else {
+            System.out.println("File login exists");
         }
     }
 
@@ -55,6 +52,16 @@ public class FileUtils {
         {
             System.out.println("Error with writing to " + filename);
             e.printStackTrace();
+        }
+    }
+
+    public static boolean checkBetHistory(String username){
+        File file = new File("data//"+username+"//bets.csv");
+        if(file.exists() && file.length() != 0){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 

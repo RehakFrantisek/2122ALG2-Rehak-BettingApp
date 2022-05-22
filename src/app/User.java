@@ -6,13 +6,15 @@ public class User {
     protected String password;
     protected int cardnumber;
     protected int cvc;
+    protected int wallet;
 
-    public User(String username, int PID, String password, int cardnumber, int cvc) {
+    public User(String username, int PID, String password, int cardnumber, int cvc, int wallet) {
         this.username = username;
         this.PID = PID;
         this.password = password;
         this.cardnumber = cardnumber;
         this.cvc = cvc;
+        this.wallet = wallet;
     }
     public String getUsername() {
         return username;

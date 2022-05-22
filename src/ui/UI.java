@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 public class UI {
 
+    private User loggedUser = null;
     private BetCompany betCompany;
     private Scanner sc = new Scanner(System.in);
 
@@ -29,7 +30,7 @@ public class UI {
 
     public void intro() throws IOException {
         betCompany.loadUsers();
-        //System.out.println(betCompany.toString());
+        System.out.println(betCompany.toString());
         while(true){
             System.out.println();
             System.out.println("1) login");
@@ -57,7 +58,19 @@ public class UI {
 
     public void login(){
         System.out.println("Username");
+        String username = sc.next();
         System.out.println("Password");
+        String password = sc.next();
+        while(!betCompany.checkLogin(username, password)){
+                System.out.println("Username or password doesnt exists");
+                System.out.println("Username");
+                username = sc.next();
+                System.out.println("Password");
+                password = sc.next();
+        }
+        System.out.println(username+" logged");
+        this.loggedUser = betCompany.getUserByUsername(username);
+
         //TODO
     }
 
@@ -70,7 +83,7 @@ public class UI {
                 username = sc.next();
             }
         }
-        //TODO
+        //TODO check
         System.out.println("Personal_ID");
         int PID = sc.nextInt();
         System.out.println("Password");

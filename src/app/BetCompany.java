@@ -48,6 +48,25 @@ public class BetCompany {
         return true;
     }
 
+    public boolean checkLogin(String username, String password){
+        for(User user : this.users){
+            if(user.getUsername().equals(username) && user.getPassword().equals(password)){
+                return true;
+            }
+        }
+        System.out.println("Wrong login");
+        return false;
+    }
+
+    public User getUserByUsername(String username){
+        for(User user : this.users){
+            if(user.getUsername().equals(username)){
+                return user;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

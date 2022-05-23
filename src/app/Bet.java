@@ -1,5 +1,7 @@
 package app;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 public class Bet {
@@ -8,10 +10,10 @@ public class Bet {
     private float homeWin;
     private float draw;
     private float awayWin;
-    private Date date;
-    private Date time;
+    private LocalDate date;
+    private LocalTime time;
 
-    public Bet(String homeTeam, String awayTeam, float homeWin, float draw, float awayWin, Date date, Date time) {
+    public Bet(String homeTeam, String awayTeam, float homeWin, float draw, float awayWin, LocalDate date, LocalTime time) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeWin = homeWin;

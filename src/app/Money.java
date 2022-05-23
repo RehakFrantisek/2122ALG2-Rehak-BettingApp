@@ -4,12 +4,12 @@ public class Money {
     protected String cardnumber;
     protected int money;
 
-    protected String owner;
+    protected boolean status = false;
 
-    public Money(String cardnumber, int money, String owner) {
+    public Money(String cardnumber, int money, boolean status) {
         this.cardnumber = cardnumber;
         this.money = money;
-        this.owner = owner;
+        this.status = status;
     }
 
     public int getMoney() {
@@ -20,11 +20,16 @@ public class Money {
         return cardnumber;
     }
 
-    public String getStatus(){
-        return owner;
+    public boolean getStatus(){
+        return status;
     }
 
-    public void setOwner(String status) {
-        this.owner = owner;
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return cardnumber+";"+money+";"+status;
     }
 }

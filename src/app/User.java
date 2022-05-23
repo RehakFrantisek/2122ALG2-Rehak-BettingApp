@@ -8,7 +8,7 @@ public class User {
     protected int cvc;
     protected int wallet;
 
-    public User(String username, int PID, String password, String cardnumber, int cvc, int wallet) {
+    public User(String username, String password, int PID, String cardnumber, int cvc, int wallet) {
         this.username = username;
         this.PID = PID;
         this.password = password;
@@ -30,6 +30,10 @@ public class User {
 
     public int getPID() {
         return PID;
+    }
+
+    public void setWallet(int wallet) {
+        this.wallet = wallet;
     }
 
     @Override

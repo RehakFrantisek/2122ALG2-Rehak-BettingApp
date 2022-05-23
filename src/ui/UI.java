@@ -4,6 +4,7 @@ package ui;
 import app.User;
 import utils.FileUtils;
 import app.BetCompany;
+import app.Money;
 import utils.OtherUtils;
 import java.io.IOException;
 import java.sql.SQLOutput;
@@ -15,6 +16,7 @@ public class UI {
 
     private User loggedUser = null;
     private BetCompany betCompany;
+    private Money walletMoney;
     private Scanner sc = new Scanner(System.in);
 
     public UI(BetCompany betCompany){
@@ -126,7 +128,12 @@ public class UI {
         System.out.println(betCompany.toStringBets());
         System.out.println("Number of match");
         System.out.println("Your bet ( 1 - homeWin, 2 - draw, 3 - awayWin)");
-        int newTicketOption = sc.nextInt();
+        System.out.println("Bet money");
+        //int matchOption = sc.nextInt();
+        //int ticketOption = sc.nextInt();
+        int moneyOption = sc.nextInt();
+        this.loggedUser.setWallet(this.loggedUser.getWallet()-moneyOption);
+        System.out.println(loggedUser.toString());
     }
 
 
@@ -146,8 +153,8 @@ public class UI {
         String username = sc.next();
         if(!betCompany.checkUsername(username)){
             while(!betCompany.checkUsername(username)){
-                System.out.println("Username taken, choose another");
-                username = sc.next();
+                System.out.println("Username taken");
+                return;
             }
         }
         //TODO check
@@ -157,14 +164,25 @@ public class UI {
         int PID = sc.nextInt();
         System.out.println("Card number");
         String cardnumber = sc.next();
+        if(betCompany.checkCardnumber(cardnumber)){
+            while(betCompany.checkCardnumber(cardnumber)){
+                System.out.println("Cardnumber taken, choose another");
+                cardnumber = sc.next();
+            }
+        }
         System.out.println("CVC code");
         int cvc = sc.nextInt();
         int wallet = betCompany.getMoneyByCardnumber(cardnumber, username);
         //ArrayList<User> account = new ArrayList<>();
-        User reguser = new User(username,PID,password,cardnumber,cvc, wallet);
+        User reguser = new User(username,password,PID,cardnumber,cvc, wallet);
         //System.out.println(this.betCompany.toString());
         FileUtils.createFolder(username);
         this.betCompany.addUser(reguser);
+        //System.out.println(walletMoney);
+        betCompany.bankMoney();
+        for(Money money : betCompany.getMoney()){
+            //System.out.println(money);
+        }
     }
 
     public void logout() throws IOException {

@@ -60,6 +60,23 @@ public class FileUtils {
         }
     }
 
+    public static void rWFile(String filename, String input)
+    {
+        try
+        {
+            FileWriter csvWriter = new FileWriter(filename, false);
+            StringBuilder sb = new StringBuilder();
+            sb.append(input);
+            sb.append("\n");
+            csvWriter.write(sb.toString());
+            csvWriter.close();
+        } catch (IOException e)
+        {
+            System.out.println("Error with writing to " + filename);
+            e.printStackTrace();
+        }
+    }
+
     public static boolean checkBetHistory(String username){
         File file = new File("data//"+username+"//bets.csv");
         if(file.exists() && file.length() != 0){

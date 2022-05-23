@@ -4,11 +4,11 @@ public class User {
     protected String username;
     protected int PID;
     protected String password;
-    protected int cardnumber;
+    protected String cardnumber;
     protected int cvc;
     protected int wallet;
 
-    public User(String username, int PID, String password, int cardnumber, int cvc, int wallet) {
+    public User(String username, int PID, String password, String cardnumber, int cvc, int wallet) {
         this.username = username;
         this.PID = PID;
         this.password = password;
@@ -24,12 +24,16 @@ public class User {
         return password;
     }
 
+    public int getWallet() {return wallet; }
+
+    public String getCardnumber() { return cardnumber; }
+
     public int getPID() {
         return PID;
     }
 
     @Override
     public String toString() {
-        return username+";"+PID+";"+password+";"+cardnumber+";"+cvc;
+        return username+";"+PID+";"+password+";"+cardnumber+";"+cvc+";"+wallet;
     }
 }

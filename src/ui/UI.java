@@ -5,9 +5,9 @@ import app.User;
 import utils.FileUtils;
 import app.BetCompany;
 import utils.OtherUtils;
-
-
 import java.io.IOException;
+import java.sql.SQLOutput;
+import java.text.ParseException;
 import java.util.Scanner;
 
 
@@ -27,14 +27,16 @@ public class UI {
         System.out.println("- APP -");
     }
 
-    public void intro() throws IOException {
+    public void intro() throws IOException, ParseException {
         FileUtils.createData();
         FileUtils.createFile("login.csv","data");
         betCompany.loadUsers();
-        //betCompany.loadBets();
+        betCompany.loadMoney();
+        betCompany.loadBets();
+
         // TODO loadBets
         //System.out.println(betCompany.toString());
-        //System.out.println(betCompany.toString2());
+        System.out.println(betCompany.toStringBets());
         while(true){
             System.out.println();
             System.out.println("1) login");
@@ -75,6 +77,7 @@ public class UI {
         }
         System.out.println(username+" logged");
         this.loggedUser = betCompany.getUserByUsername(username);
+        //betCompany.getMoneyByCardnumber(this.loggedUser.getCardnumber(), username);
         letsBet();
         //TODO
     }
@@ -85,7 +88,7 @@ public class UI {
             System.out.println("Lets BET");
             System.out.println("----------");
             System.out.println(loggedUser.getUsername());
-            System.out.println("'MONEY'");
+            System.out.println("$ "+loggedUser.getWallet());
             System.out.println("----------");
             System.out.println("1) new ticket");
             System.out.println("2) active tickets");
@@ -94,7 +97,8 @@ public class UI {
             int letsBetOption = sc.nextInt();
             switch (letsBetOption) {
                 case 1:
-                    //newTicket();
+                    newTicket();
+                    break;
                 case 2:
                     //myTickets();
                 case 3:
@@ -109,6 +113,22 @@ public class UI {
             }
         }
     }
+
+    public void newTicket() {
+        System.out.println("");
+        System.out.println("New Ticket");
+        System.out.println("----------");
+        System.out.println(loggedUser.getUsername());
+        System.out.println("");
+        System.out.print("Disponsible money: ");
+        System.out.println("$ "+loggedUser.getWallet());
+        System.out.println("----------");
+        System.out.println(betCompany.toStringBets());
+        System.out.println("Number of match");
+        System.out.println("Your bet ( 1 - homeWin, 2 - draw, 3 - awayWin)");
+        int newTicketOption = sc.nextInt();
+    }
+
 
     public void myHistory(String username){
         System.out.println("Bet history "+username);
@@ -131,15 +151,15 @@ public class UI {
             }
         }
         //TODO check
-        System.out.println("Personal_ID");
-        int PID = sc.nextInt();
         System.out.println("Password");
         String password = sc.next();
+        System.out.println("Personal_ID");
+        int PID = sc.nextInt();
         System.out.println("Card number");
-        int cardnumber = sc.nextInt();
+        String cardnumber = sc.next();
         System.out.println("CVC code");
         int cvc = sc.nextInt();
-        int wallet = OtherUtils.makeMoney();
+        int wallet = betCompany.getMoneyByCardnumber(cardnumber, username);
         //ArrayList<User> account = new ArrayList<>();
         User reguser = new User(username,PID,password,cardnumber,cvc, wallet);
         //System.out.println(this.betCompany.toString());
@@ -154,7 +174,7 @@ public class UI {
         this.loggedUser = null;
     }
 
-    public void quit() throws IOException {
+    public void quit() throws IOException, ParseException {
         while(true){
             System.out.println("Are you sure to quit?");
             System.out.println("Press Y for quit");

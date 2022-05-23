@@ -1,6 +1,11 @@
 package utils;
 
+import app.Bet;
+import app.Money;
+import app.User;
+
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileUtils {

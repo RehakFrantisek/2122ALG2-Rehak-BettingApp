@@ -1,12 +1,5 @@
 package app;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.time.Instant;
-import java.util.ArrayList;
-
-import static utils.FileUtils.readCSV;
-
 public class Ticket {
     private Bet bet = null;
     private int who;
@@ -14,6 +7,7 @@ public class Ticket {
     private int amount;
 
     private String status = "Waiting";
+
 
     public Ticket(Bet bet, int who, int amount) {
         this.bet = bet;
@@ -28,8 +22,25 @@ public class Ticket {
         this.status = status;
     }
 
+    public int getWho() {
+        return who;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void completeTicket(boolean won){
+        if(won) this.status = "Won";
+        else this.status = "Lost";
+    }
+
     public String getStatus() {
         return status;
+    }
+
+    public Bet getBet() {
+        return bet;
     }
 
     public void setBet(Bet bet) {

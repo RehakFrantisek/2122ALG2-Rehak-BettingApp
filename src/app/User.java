@@ -12,11 +12,11 @@ public class User {
     protected String password;
     protected String cardnumber;
     protected int cvc;
-    protected int wallet;
+    protected float wallet;
 
     protected ArrayList<Ticket> tickets = new ArrayList<>();
 
-    public User(String username, String password, int PID, String cardnumber, int cvc, int wallet) {
+    public User(String username, String password, int PID, String cardnumber, int cvc, float wallet) {
         this.username = username;
         this.PID = PID;
         this.password = password;
@@ -32,7 +32,7 @@ public class User {
         return password;
     }
 
-    public int getWallet() {return wallet; }
+    public float getWallet() {return wallet; }
 
     public String getCardnumber() { return cardnumber; }
 
@@ -61,12 +61,67 @@ public class User {
     }
 
     public void loadTickets(){
+        this.tickets.clear();
         String[] rows = FileUtils.readCSV("data//" + this.username + "//bets.csv");
         for(String row : rows){
             String[] parms = row.split(";");
             Bet newBet = new Bet(parms[0], parms[1], Float.parseFloat(parms[2]), Float.parseFloat(parms[3]), Float.parseFloat(parms[4]), LocalDate.parse(parms[5]), LocalTime.parse(parms[6]));
             Ticket newTicket = new Ticket(newBet, Integer.parseInt(parms[7]), Integer.parseInt(parms[8]), parms[9]);
-            this.addTicket(newTicket);
+            if(!checkDuplicity(newTicket)){
+                this.tickets.add(newTicket);
+            }
+        }
+    }
+
+    public boolean checkDuplicity(Ticket ticket){
+        for(Ticket ticket1 : this.tickets){
+            if(ticket1.equals(ticket)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateTickets(){
+        String t = "";
+        int val = 0;
+        int max = this.tickets.size();
+        for(Ticket ticket : this.tickets){
+            if(max-1>val){
+                t += ticket.toString() + "\n";
+            }else{
+                t += ticket.toString();
+            }
+            val++;
+        }
+        FileUtils.rWFile("data//" + this.username + "//bets.csv", t);
+    }
+
+    public Ticket getTicketByIndex(int rowIndex){
+        return this.tickets.get(rowIndex-1);
+    }
+
+    public void checkTickets(){
+        for(Ticket ticket : this.tickets){
+            if(ticket.getBet().getDate().compareTo(LocalDate.now()) < 0 && ticket.getStatus().equals("Waiting")){
+                int random = (int)(Math.random() * 49 + 1);
+                if(random % 2 == 0){
+                    ticket.completeTicket(true);
+                    float odd = 0;
+                    if(ticket.getWho() == 1){
+                        odd = ticket.getBet().getHomeWin();
+                    } else if (ticket.getWho() == 2) {
+                        odd = ticket.getBet().getDraw();
+                    }
+                    else{
+                        odd = ticket.getBet().getAwayWin();
+                    }
+                    this.wallet += (odd * ticket.getAmount());
+                }
+                else{
+                    ticket.completeTicket(false);
+                }
+            }
         }
     }
 

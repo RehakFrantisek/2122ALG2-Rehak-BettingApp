@@ -2,7 +2,6 @@ package app;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 public class Bet {
     private String homeTeam;
@@ -25,6 +24,26 @@ public class Bet {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public String getHomeTeam() {
+        return homeTeam;
+    }
+
+    public float getHomeWin() {
+        return homeWin;
+    }
+
+    public float getDraw() {
+        return draw;
+    }
+
+    public float getAwayWin() {
+        return awayWin;
     }
 
     @Override

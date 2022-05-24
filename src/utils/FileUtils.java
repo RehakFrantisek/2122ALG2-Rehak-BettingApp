@@ -1,11 +1,6 @@
 package utils;
 
-import app.Bet;
-import app.Money;
-import app.User;
-
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileUtils {
@@ -14,8 +9,6 @@ public class FileUtils {
         File folder = new File("data");
         if(!folder.exists()){
             folder.mkdir();
-            //System.out.println(folder + " created");
-            //System.out.println("File doesnt exists");
         }
     }
 
@@ -23,11 +16,9 @@ public class FileUtils {
         File folder = new File("data//"+foldername);
         if(!folder.exists()){
             folder.mkdir();
-            //System.out.println(folder + " created");
-            //System.out.println("File doesnt exists");
         }
         else {
-            System.out.println("Folder 'username' exists");
+            //System.out.println("Folder 'username' exists");
         }
     }
 
@@ -35,11 +26,9 @@ public class FileUtils {
         File file = new File(data+"//"+filename);
         if(!file.exists()){
             file.createNewFile();
-            //System.out.println(filename + " created");
-            //System.out.println("doesnt exists");
         }
         else {
-            System.out.println("File login exists");
+            //System.out.println("File login exists");
         }
     }
 
@@ -89,15 +78,6 @@ public class FileUtils {
         }
     }
 
-    public static boolean checkBetHistory(String username){
-        File file = new File("data//"+username+"//bets.csv");
-        if(file.exists() && file.length() != 0){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 
     public static String[] readCSV(String filepath){
         String data = "";
@@ -106,14 +86,12 @@ public class FileUtils {
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 data += myReader.nextLine() + "\n";
-                //System.out.println(data);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("readCSV error");
             e.printStackTrace();
         }
-        //System.out.println(data);
         return data.split("\n");
     }
 

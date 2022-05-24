@@ -1,25 +1,23 @@
 package ui;
 
 
-import app.User;
+import app.*;
+import utils.ComparatorByStatus;
 import utils.FileUtils;
-import app.BetCompany;
-import app.Money;
-import app.Bet;
-import app.Ticket;
-import utils.OtherUtils;
+
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.text.ParseException;
-import java.util.Scanner;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.*;
 
 
 public class UI {
 
     private User loggedUser = null;
     private BetCompany betCompany;
-    private Money walletMoney;
     private Scanner sc = new Scanner(System.in);
+    public static String formatted;
 
     public UI(BetCompany betCompany){
         this.betCompany = betCompany;
@@ -37,14 +35,20 @@ public class UI {
         betCompany.loadUsers();
         betCompany.loadMoney();
         betCompany.loadBets();
-        //System.out.println(betCompany.toString());
-        System.out.println(betCompany.toStringBets());
+        //System.out.println(betCompany.toStringBets());
         while(true){
             System.out.println();
-            System.out.println("1) login");
-            System.out.println("2) register");
-            System.out.println("0) quit");
-            int option = sc.nextInt();
+            loginMenu();
+            int option;
+            while(!sc.hasNextInt()){
+                System.out.println();
+                System.out.println("Not a number");
+                System.out.println("Choose 0-2");
+                System.out.println("");
+                loginMenu();
+                sc.next();
+            }
+            option = sc.nextInt();
             switch(option){
                 case 1:
                     login();
@@ -62,7 +66,15 @@ public class UI {
         }
     }
 
-    public void login() throws IOException, ParseException {
+    public void loginMenu(){
+        StringBuffer buffer = new StringBuffer();
+        Formatter formatter = new Formatter(buffer, Locale.US);
+        formatter.format("1) login \n2) register \n0) quit");
+        System.out.println(formatter);
+    }
+
+    public void login(){
+        System.out.println();
         System.out.println("Username");
         String username = sc.next();
         System.out.println("Password");
@@ -70,35 +82,46 @@ public class UI {
         while(!betCompany.checkLogin(username, password)){
             System.out.println("Username or password doesnt exists");
             return;
-            //System.out.println("Username");
-            //username = sc.next();
-            //System.out.println("Password");
-            //password = sc.next();
         }
         System.out.println(username+" logged");
-        // TODO nacist bets.csv
-        // TODO bet + stringy -> ticket
         this.loggedUser = betCompany.getUserByUsername(username);
         if(FileUtils.doesFileExists("data//" + this.loggedUser.getUsername() + "//bets.csv")){
             this.loggedUser.loadTickets();
+            this.loggedUser.checkTickets();
+            this.loggedUser.updateTickets();
+            this.betCompany.updateUsers();
         }
-        //betCompany.getMoneyByCardnumber(this.loggedUser.getCardnumber(), username);
         letsBet();
     }
 
-    public void letsBet() throws IOException {
+    public void letsBetMenu(){
+        System.out.println("----------");
+        System.out.println("1) new ticket");
+        System.out.println("2) active tickets");
+        System.out.println("3) bet history");
+        System.out.println("4) bet history sorted by bet value (ascending)");
+        System.out.println("5) bet history sorted by bet value (descending)");
+        System.out.println("6) logout");
+    }
+
+    public void letsBet(){
         while(true) {
-            System.out.println("");
+            System.out.println();
             System.out.println("Lets BET");
             System.out.println("----------");
             System.out.println(loggedUser.getUsername());
-            System.out.println("$ "+loggedUser.getWallet());
-            System.out.println("----------");
-            System.out.println("1) new ticket");
-            System.out.println("2) active tickets");
-            System.out.println("3) bet history");
-            System.out.println("4) logout");
-            int letsBetOption = sc.nextInt();
+            formatted = String.format("$ %.1f",loggedUser.getWallet());
+            System.out.println(formatted);
+            letsBetMenu();
+            int letsBetOption;
+            while(!sc.hasNextInt()){
+                System.out.println();
+                System.out.println("Not a number");
+                System.out.println("Choose 1-6");
+                letsBetMenu();
+                sc.next();
+            }
+            letsBetOption = sc.nextInt();
             switch (letsBetOption) {
                 case 1:
                     newTicket();
@@ -107,10 +130,15 @@ public class UI {
                     myTickets();
                     break;
                 case 3:
-                    //myHistory(loggedUser.getUsername());
                     myHistory();
                     break;
                 case 4:
+                    myHistoryByMoney();
+                    break;
+                case 5:
+                    myHistoryByLMoney();
+                    break;
+                case 6:
                     logout();
                     return;
                 default:
@@ -121,11 +149,11 @@ public class UI {
     }
 
     public void newTicket() {
-        System.out.println("");
+        System.out.println();
         System.out.println("New Ticket");
         System.out.println("----------");
         System.out.println(loggedUser.getUsername());
-        System.out.println("");
+        System.out.println();
         System.out.print("Disponsible money: ");
         System.out.println("$ "+loggedUser.getWallet());
         if(loggedUser.getWallet() == 0){
@@ -143,13 +171,15 @@ public class UI {
         int winnerOption = sc.nextInt();
         System.out.println("How much money you want bet: ");
         int moneyOption = sc.nextInt();
+        if(loggedUser.getWallet() < moneyOption){
+            System.out.println("You tried to bet more then you could");
+            return;
+        }
         Ticket myTicket = new Ticket(myBet, winnerOption, moneyOption);
         this.loggedUser.addTicket(myTicket);
         this.loggedUser.removeMoney(moneyOption);
         betCompany.updateUsers();
         FileUtils.appendToFile("data//" + this.loggedUser.getUsername() + "//bets.csv", myTicket.toString());
-        //this.loggedUser.setWallet(this.loggedUser.getWallet()-moneyOption);
-        //System.out.println(loggedUser.toString());
     }
 
     public void myTickets(){
@@ -162,6 +192,8 @@ public class UI {
                     sb.append(ticket.toString()).append("\n");
                 }
             }
+            System.out.println("");
+            System.out.println("My active tickets");
             System.out.println(sb.toString());
         }
     }
@@ -172,28 +204,60 @@ public class UI {
             System.out.println("No bet history");
         } else {
             for (Ticket ticket : this.loggedUser.getTickets()) {
-                if (ticket.getStatus().equals("Done")) {
+                if (!ticket.getStatus().equals("Waiting")) {
                     sb.append(ticket.toString()).append("\n");
                 }
             }
+            System.out.println("");
+            System.out.println("My bet history");
             System.out.println(sb.toString());
         }
     }
 
-    /*
 
-    public void myHistory(String username){
-        System.out.println("Bet history "+username);
-        System.out.println("");
-        if(FileUtils.checkBetHistory(username)){
-            System.out.println("'VYPIS ZAPASU'");
+    public void myHistoryByMoney() {
+        ArrayList<Ticket> ticketByWin = new ArrayList<>();
+        for (Ticket ticket : this.loggedUser.getTickets()){
+            ticketByWin.add(ticket);
         }
-        else{
+        Collections.sort(ticketByWin, new ComparatorByStatus().reversed());
+        StringBuilder sb = new StringBuilder();
+        if (this.loggedUser.getTickets().isEmpty()) {
             System.out.println("No bet history");
+        } else {
+            for (Ticket ticketByWins : ticketByWin){
+                if (!ticketByWins.getStatus().equals("Waiting")) {
+                    sb.append(ticketByWins.toString()).append("\n");
+                }
+            }
+            System.out.println("");
+            System.out.println("My bet history by money (ascending)");
+            System.out.println(sb.toString());
         }
     }
-*/
-    public void register() throws IOException {
+
+    public void myHistoryByLMoney() {
+        ArrayList<Ticket> ticketByWin = new ArrayList<>();
+        for (Ticket ticket : this.loggedUser.getTickets()){
+            ticketByWin.add(ticket);
+        }
+        Collections.sort(ticketByWin, Comparator.comparing(Ticket::getAmount));
+        StringBuilder sb = new StringBuilder();
+        if (this.loggedUser.getTickets().isEmpty()) {
+            System.out.println("No bet history");
+        } else {
+            for (Ticket ticketByWins : ticketByWin){
+                if (!ticketByWins.getStatus().equals("Waiting")) {
+                    sb.append(ticketByWins.toString()).append("\n");
+                }
+            }
+            System.out.println();
+            System.out.println("My bet history by money (descending)");
+            System.out.println(sb.toString());
+        }
+    }
+
+    public void register(){
         System.out.println("Username");
         String username = sc.next();
         if(!betCompany.checkUsername(username)){
@@ -216,35 +280,38 @@ public class UI {
         }
         System.out.println("CVC code");
         int cvc = sc.nextInt();
-        int wallet = betCompany.getMoneyByCardnumber(cardnumber, username);
-        //ArrayList<User> account = new ArrayList<>();
-        User reguser = new User(username,password,PID,cardnumber,cvc, wallet);
-        //System.out.println(this.betCompany.toString());
-        FileUtils.createFolder(username);
-        this.betCompany.addUser(reguser);
-        betCompany.bankMoney();
-        for(Money money : betCompany.getMoney()){
-            //System.out.println(money);
+        Pattern pattern = Pattern.compile("^\\d\\d\\d$");
+        Matcher matcher = pattern.matcher(Integer.toString(cvc));
+        boolean matchFound = matcher.find();
+        if(!matchFound) {
+            System.out.println("Wrong input");
+        }
+        else{
+            float wallet = betCompany.getMoneyByCardnumber(cardnumber, username);
+            User reguser = new User(username,password,PID,cardnumber,cvc, wallet);
+            FileUtils.createFolder(username);
+            this.betCompany.addUser(reguser);
+            betCompany.bankMoney();
         }
     }
 
-    public void logout() throws IOException {
-        System.out.println("");
+    public void logout(){
+        System.out.println();
         System.out.println(loggedUser.getUsername()+ " you are gonna be logged out");
-        System.out.println("");
+        System.out.println();
         this.loggedUser = null;
     }
 
     public void quit() throws IOException, ParseException {
         while(true){
             System.out.println("Are you sure to quit?");
-            System.out.println("Press Y for quit");
-            System.out.println("Press N to return to the main page");
-            String option = sc.next();
+            System.out.println("0) for quit");
+            System.out.println("1) to return to the main page");
+            QuitType option = QuitType.values()[sc.nextInt()];
             switch(option){
-                case "Y":
+                case YES:
                     return;
-                case "N":
+                case NO:
                     intro();
                     return;
                 default:

@@ -2,17 +2,17 @@ package app;
 
 public class Money {
     protected String cardnumber;
-    protected int money;
+    protected float money;
 
     protected boolean status = false;
 
-    public Money(String cardnumber, int money, boolean status) {
+    public Money(String cardnumber, float money, boolean status) {
         this.cardnumber = cardnumber;
         this.money = money;
         this.status = status;
     }
 
-    public int getMoney() {
+    public float getMoney() {
         return money;
     }
 

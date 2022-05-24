@@ -299,6 +299,7 @@ public class UI {
         System.out.println();
         System.out.println(loggedUser.getUsername()+ " you are gonna be logged out");
         System.out.println();
+        loggedUser.saveToPdf(this.loggedUser.getUsername());
         this.loggedUser = null;
     }
 

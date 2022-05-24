@@ -1,7 +1,13 @@
 package app;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import utils.FileUtils;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -122,6 +128,24 @@ public class User {
                     ticket.completeTicket(false);
                 }
             }
+        }
+    }
+
+    public boolean saveToPdf(String username) {
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream("data//"+username+"//statistics.pdf"));
+
+            document.open();
+            document.add(new Paragraph("Username: " + username));
+            document.add(new Paragraph(" "));
+            document.close();
+            return true;
+
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (DocumentException ex) {
+            return false;
         }
     }
 

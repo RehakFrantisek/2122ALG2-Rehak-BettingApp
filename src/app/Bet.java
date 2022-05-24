@@ -23,6 +23,10 @@ public class Bet {
         this.time = time;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
     @Override
     public String toString()  {
         return homeTeam+";"+awayTeam+";"+homeWin+";"+draw+";"+awayWin+";"+date+";"+time;

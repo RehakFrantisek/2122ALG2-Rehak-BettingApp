@@ -5,6 +5,8 @@ import app.User;
 import utils.FileUtils;
 import app.BetCompany;
 import app.Money;
+import app.Bet;
+import app.Ticket;
 import utils.OtherUtils;
 import java.io.IOException;
 import java.sql.SQLOutput;
@@ -35,8 +37,6 @@ public class UI {
         betCompany.loadUsers();
         betCompany.loadMoney();
         betCompany.loadBets();
-
-        // TODO loadBets
         //System.out.println(betCompany.toString());
         System.out.println(betCompany.toStringBets());
         while(true){
@@ -48,14 +48,12 @@ public class UI {
             switch(option){
                 case 1:
                     login();
-                    //loadUserData();
                     break;
                 case 2:
                     register();
                     break;
                 case 0:
                     quit();
-                    System.out.println("Have a good day!");
                     return;
                 default:
                     System.out.println("Wrong input");
@@ -64,24 +62,28 @@ public class UI {
         }
     }
 
-    public void login() throws IOException {
+    public void login() throws IOException, ParseException {
         System.out.println("Username");
         String username = sc.next();
         System.out.println("Password");
         String password = sc.next();
         while(!betCompany.checkLogin(username, password)){
-                System.out.println("Username or password doesnt exists");
-                return;
-                //System.out.println("Username");
-                //username = sc.next();
-                //System.out.println("Password");
-                //password = sc.next();
+            System.out.println("Username or password doesnt exists");
+            return;
+            //System.out.println("Username");
+            //username = sc.next();
+            //System.out.println("Password");
+            //password = sc.next();
         }
         System.out.println(username+" logged");
+        // TODO nacist bets.csv
+        // TODO bet + stringy -> ticket
         this.loggedUser = betCompany.getUserByUsername(username);
+        if(FileUtils.doesFileExists("data//" + this.loggedUser.getUsername() + "//bets.csv")){
+            this.loggedUser.loadTickets();
+        }
         //betCompany.getMoneyByCardnumber(this.loggedUser.getCardnumber(), username);
         letsBet();
-        //TODO
     }
 
     public void letsBet() throws IOException {
@@ -102,9 +104,11 @@ public class UI {
                     newTicket();
                     break;
                 case 2:
-                    //myTickets();
+                    myTickets();
+                    break;
                 case 3:
-                    myHistory(loggedUser.getUsername());
+                    //myHistory(loggedUser.getUsername());
+                    myHistory();
                     break;
                 case 4:
                     logout();
@@ -124,18 +128,59 @@ public class UI {
         System.out.println("");
         System.out.print("Disponsible money: ");
         System.out.println("$ "+loggedUser.getWallet());
+        if(loggedUser.getWallet() == 0){
+            System.out.println("Not enough money");
+            return;
+        }
         System.out.println("----------");
         System.out.println(betCompany.toStringBets());
         System.out.println("Number of match");
         System.out.println("Your bet ( 1 - homeWin, 2 - draw, 3 - awayWin)");
-        System.out.println("Bet money");
-        //int matchOption = sc.nextInt();
-        //int ticketOption = sc.nextInt();
+        System.out.println("Choose match: ");
+        int matchRow = sc.nextInt();
+        Bet myBet = this.betCompany.getBetByIndex(matchRow);
+        System.out.println("What are you betting at: ");
+        int winnerOption = sc.nextInt();
+        System.out.println("How much money you want bet: ");
         int moneyOption = sc.nextInt();
-        this.loggedUser.setWallet(this.loggedUser.getWallet()-moneyOption);
-        System.out.println(loggedUser.toString());
+        Ticket myTicket = new Ticket(myBet, winnerOption, moneyOption);
+        this.loggedUser.addTicket(myTicket);
+        this.loggedUser.removeMoney(moneyOption);
+        betCompany.updateUsers();
+        FileUtils.appendToFile("data//" + this.loggedUser.getUsername() + "//bets.csv", myTicket.toString());
+        //this.loggedUser.setWallet(this.loggedUser.getWallet()-moneyOption);
+        //System.out.println(loggedUser.toString());
     }
 
+    public void myTickets(){
+        StringBuilder sb = new StringBuilder();
+        if(this.loggedUser.getTickets().isEmpty()){
+            System.out.println("No active tickets");
+        }else{
+            for(Ticket ticket : this.loggedUser.getTickets()){
+                if(ticket.getStatus().equals("Waiting")) {
+                    sb.append(ticket.toString()).append("\n");
+                }
+            }
+            System.out.println(sb.toString());
+        }
+    }
+
+    public void myHistory() {
+        StringBuilder sb = new StringBuilder();
+        if (this.loggedUser.getTickets().isEmpty()) {
+            System.out.println("No bet history");
+        } else {
+            for (Ticket ticket : this.loggedUser.getTickets()) {
+                if (ticket.getStatus().equals("Done")) {
+                    sb.append(ticket.toString()).append("\n");
+                }
+            }
+            System.out.println(sb.toString());
+        }
+    }
+
+    /*
 
     public void myHistory(String username){
         System.out.println("Bet history "+username);
@@ -147,7 +192,7 @@ public class UI {
             System.out.println("No bet history");
         }
     }
-
+*/
     public void register() throws IOException {
         System.out.println("Username");
         String username = sc.next();
@@ -157,7 +202,6 @@ public class UI {
                 return;
             }
         }
-        //TODO check
         System.out.println("Password");
         String password = sc.next();
         System.out.println("Personal_ID");
@@ -178,7 +222,6 @@ public class UI {
         //System.out.println(this.betCompany.toString());
         FileUtils.createFolder(username);
         this.betCompany.addUser(reguser);
-        //System.out.println(walletMoney);
         betCompany.bankMoney();
         for(Money money : betCompany.getMoney()){
             //System.out.println(money);
@@ -201,10 +244,9 @@ public class UI {
             switch(option){
                 case "Y":
                     return;
-                    //TODO repair
                 case "N":
                     intro();
-                    break;
+                    return;
                 default:
                     System.out.println("Wrong input");
                     break;

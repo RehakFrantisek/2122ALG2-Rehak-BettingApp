@@ -47,6 +47,10 @@ public class FileUtils {
     {
         try
         {
+            File myFile = new File(filename);
+            if(!doesFileExists(filename)){
+                myFile.createNewFile();
+            }
             FileWriter csvWriter = new FileWriter(filename, true);
             StringBuilder sb = new StringBuilder();
             sb.append(input);
@@ -58,6 +62,14 @@ public class FileUtils {
             System.out.println("Error with writing to " + filename);
             e.printStackTrace();
         }
+    }
+
+    public static boolean doesFileExists(String filename){
+        File myFile = new File(filename);
+        if(!myFile.exists()){
+            return false;
+        }
+        return true;
     }
 
     public static void rWFile(String filename, String input)

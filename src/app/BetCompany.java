@@ -20,6 +20,8 @@ public class BetCompany {
     private ArrayList<Bet> availableBets = new ArrayList<>();
     private ArrayList<Money> money = new ArrayList<>();
 
+    private ArrayList<Bet> myTicket = new ArrayList<>();
+
     public BetCompany(String name) {
         this.name = name;
     }
@@ -36,7 +38,7 @@ public class BetCompany {
         return users;
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         this.users.add(user);
         FileUtils.appendToFile("data//login.csv",user.toString());
     }
@@ -51,6 +53,16 @@ public class BetCompany {
         }
         //System.out.println(s);
         FileUtils.rWFile("bankAccounts.csv",s);
+    }
+
+    public void updateUsers(){
+        String u = "";
+        for(User user : this.users){
+            u += user.toString()+"\n";
+            //System.out.println(users.toString());
+        }
+        //System.out.println(u);
+        FileUtils.rWFile("data//login.csv",u);
     }
 
     public void loadUsers(){
@@ -120,7 +132,6 @@ public class BetCompany {
         //System.out.println(lines.length);
         for(String bet : bets){
             String[] parm = bet.split(";");
-
             Bet bet2 = new Bet(parm[0],parm[1],Float.parseFloat(parm[2]),Float.parseFloat(parm[3]),Float.parseFloat(parm[4]), LocalDate.parse(parm[5]), LocalTime.parse(parm[6]));
             this.availableBets.add(bet2);
         }
@@ -156,6 +167,10 @@ public class BetCompany {
             }
         }
         return null;
+    }
+
+    public Bet getBetByIndex(int rowNumber){
+        return this.availableBets.get(rowNumber-1);
     }
 
     public String toStringBets() {

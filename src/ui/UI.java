@@ -17,11 +17,11 @@ import java.util.regex.*;
 public class UI {
 
     private User loggedUser = null;
-    private BetCompany betCompany;
-    private Scanner sc = new Scanner(System.in);
-    public static String formatted;
+    private IBetCompany betCompany;
+    private final Scanner sc = new Scanner(System.in);
+    private static String formatted;
 
-    public UI(BetCompany betCompany){
+    public UI(IBetCompany betCompany){
         this.betCompany = betCompany;
     }
 
@@ -34,7 +34,7 @@ public class UI {
 
     /* intro page with methods to load data */
     public void intro() throws IOException, ParseException {
-        FileUtils.createData();
+        FileUtils.createFolder("data");
         FileUtils.createFile("login.csv","data");
         betCompany.loadUsers();
         betCompany.loadMoney();
@@ -71,7 +71,7 @@ public class UI {
     }
 
     /* callable login menu */
-    public void loginMenu(){
+    private void loginMenu(){
         StringBuffer buffer = new StringBuffer();
         Formatter formatter = new Formatter(buffer, Locale.US);
         formatter.format("1) login \n2) register \n0) quit");
@@ -79,7 +79,7 @@ public class UI {
     }
 
     /* login with 'username//bets.csv' check */
-    public void login(){
+    private void login() throws IOException {
         System.out.println();
         System.out.println("Username");
         String username = sc.next();
@@ -96,12 +96,14 @@ public class UI {
             this.loggedUser.checkTickets();
             this.loggedUser.updateTickets();
             this.betCompany.updateUsers();
+        }else{
+            FileUtils.createFile(this.loggedUser.getUsername()+"//bets.csv","data");
         }
         System.out.println(LocalTime.now());
         letsBet();
     }
 
-    public void letsBetMenu(){
+    private void letsBetMenu(){
         System.out.println("----------");
         System.out.println("1) new ticket");
         System.out.println("2) active tickets");
@@ -112,7 +114,7 @@ public class UI {
     }
 
     /* betting menu */
-    public void letsBet(){
+    private void letsBet(){
         while(true) {
             this.loggedUser.loadTickets();
             this.loggedUser.checkTickets();
@@ -160,7 +162,7 @@ public class UI {
     }
 
     /* place new ticket menu with methods */
-    public void newTicket() {
+    private void newTicket() {
         System.out.println();
         System.out.println("New Ticket");
         System.out.println("----------");
@@ -195,7 +197,7 @@ public class UI {
     }
 
     /* bet history (tickets with status "waiting") */
-    public void myTickets(){
+    private void myTickets(){
         StringBuilder sb = new StringBuilder();
         if(this.loggedUser.getTickets().isEmpty()){
             System.out.println("No active tickets");
@@ -212,7 +214,7 @@ public class UI {
     }
 
     /* bet history (tickets with status "!waiting") */
-    public void myHistory() {
+    private void myHistory() {
         StringBuilder sb = new StringBuilder();
         if (this.loggedUser.getTickets().isEmpty()) {
             System.out.println("No bet history");
@@ -229,7 +231,7 @@ public class UI {
     }
 
     /* bet history by betted money */
-    public void myHistoryByMoney() {
+    private void myHistoryByMoney() {
         ArrayList<Ticket> ticketByWin = new ArrayList<>();
         for (Ticket ticket : this.loggedUser.getTickets()){
             ticketByWin.add(ticket);
@@ -251,7 +253,7 @@ public class UI {
     }
 
     /* bet history by betted money reversed */
-    public void myHistoryByLMoney() {
+    private void myHistoryByLMoney() {
         ArrayList<Ticket> ticketByWin = new ArrayList<>();
         for (Ticket ticket : this.loggedUser.getTickets()){
             ticketByWin.add(ticket);
@@ -273,7 +275,7 @@ public class UI {
     }
 
     /* register menu */
-    public void register(){
+    private void register(){
         System.out.println("Username");
         String username = sc.next();
         if(!betCompany.checkUsername(username)){
@@ -312,7 +314,7 @@ public class UI {
     }
 
     /* logout menu */
-    public void logout(){
+    private void logout(){
         this.loggedUser.loadTickets();
         this.loggedUser.checkTickets();
         this.loggedUser.updateTickets();
@@ -324,7 +326,7 @@ public class UI {
     }
 
     /* quit menu */
-    public void quit() throws IOException, ParseException {
+    private void quit() throws IOException, ParseException {
         while(true){
             System.out.println("Are you sure to quit?");
             System.out.println("0) for quit");

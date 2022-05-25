@@ -8,18 +8,6 @@ import java.util.Scanner;
  * @author Frantisek Rehak
  */
 public class FileUtils {
-    /**
-     * This is class representing utilies for working with files.
-     */
-    public static void createData() {
-        /**
-         * This method create folder data
-         */
-        File folder = new File("data");
-        if(!folder.exists()){
-            folder.mkdir();
-        }
-    }
 
     public static void createFolder(String foldername){
         /**

@@ -8,7 +8,7 @@ public class Ticket {
     /**
      * This is class representing Ticket
      */
-    private Bet bet = null;
+    private Bet bet;
     private int who;
 
     private int amount;
@@ -52,10 +52,6 @@ public class Ticket {
 
     public Bet getBet() {
         return bet;
-    }
-
-    public void setBet(Bet bet) {
-        this.bet = bet;
     }
 
     @Override

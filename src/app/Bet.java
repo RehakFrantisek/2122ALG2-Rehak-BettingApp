@@ -37,10 +37,6 @@ public class Bet {
         return time;
     }
 
-    public String getHomeTeam() {
-        return homeTeam;
-    }
-
     public float getHomeWin() {
         return homeWin;
     }

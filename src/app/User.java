@@ -5,6 +5,8 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import utils.FileUtils;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
@@ -19,12 +21,12 @@ public class User {
     /**
      * This is class representing User
      */
-    protected String username;
-    protected int PID;
-    protected String password;
-    protected String cardnumber;
-    protected int cvc;
-    protected float wallet;
+    private String username;
+    private int PID;
+    private String password;
+    private String cardnumber;
+    private int cvc;
+    private float wallet;
 
     protected ArrayList<Ticket> tickets = new ArrayList<>();
 
@@ -48,28 +50,12 @@ public class User {
 
     public String getCardnumber() { return cardnumber; }
 
-    public void addMoney(int amount){
-        /**
-         * This method add money to user.
-         * @param amount Added money.
-         */
-        this.wallet += amount;
-    }
-
     public void removeMoney(int amount){
         /**
          * This method remove money from user.
          * @param amount Taken money.
          */
         this.wallet -= amount;
-    }
-
-    public int getPID() {
-        return PID;
-    }
-
-    public void setWallet(int wallet) {
-        this.wallet = wallet;
     }
 
     public void addTicket(Ticket ticket){
@@ -88,14 +74,17 @@ public class User {
          * This method load tickets from homedir file bets.csv.
          * Adding them to ArrayList tickets.
          */
-        this.tickets.clear();
-        String[] rows = FileUtils.readCSV("data//" + this.username + "//bets.csv");
-        for(String row : rows){
-            String[] parms = row.split(";");
-            Bet newBet = new Bet(parms[0], parms[1], Float.parseFloat(parms[2]), Float.parseFloat(parms[3]), Float.parseFloat(parms[4]), LocalDate.parse(parms[5]), LocalTime.parse(parms[6]));
-            Ticket newTicket = new Ticket(newBet, Integer.parseInt(parms[7]), Integer.parseInt(parms[8]), parms[9]);
-            if(!checkDuplicity(newTicket)){
-                this.tickets.add(newTicket);
+        File checkFile = new File("data//"+this.username+"//bets.csv");
+        if(checkFile.length() != 0) {
+            this.tickets.clear();
+            String[] rows = FileUtils.readCSV("data//" + this.username + "//bets.csv");
+            for (String row : rows) {
+                String[] parms = row.split(";");
+                Bet newBet = new Bet(parms[0], parms[1], Float.parseFloat(parms[2]), Float.parseFloat(parms[3]), Float.parseFloat(parms[4]), LocalDate.parse(parms[5]), LocalTime.parse(parms[6]));
+                Ticket newTicket = new Ticket(newBet, Integer.parseInt(parms[7]), Integer.parseInt(parms[8]), parms[9]);
+                if (!checkDuplicity(newTicket)) {
+                    this.tickets.add(newTicket);
+                }
             }
         }
     }

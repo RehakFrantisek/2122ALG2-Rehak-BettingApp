@@ -10,31 +10,20 @@ import static utils.FileUtils.readCSV;
  *
  * @author Frantisek Rehak
  */
-public class BetCompany {
+public class BetCompany implements IBetCompany{
     /**
      * This is class representing BetCompany
      */
-    public String name;
+    private String name;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Bet> availableBets = new ArrayList<>();
     private ArrayList<Money> money = new ArrayList<>();
-
-    private ArrayList<Bet> myTicket = new ArrayList<>();
-
     public BetCompany(String name) {
         this.name = name;
     }
 
     public String getName() {
         return name;
-    }
-
-    public ArrayList<Money> getMoney() {
-        return this.money;
-    }
-
-    public ArrayList<User> getUsers() {
-        return users;
     }
 
     public void addUser(User user) {
@@ -91,7 +80,6 @@ public class BetCompany {
                     this.users.add(user);
                 }
             }finally {
-                //System.out.println("Users successfully loaded");
             }
         }
         else{

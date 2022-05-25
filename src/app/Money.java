@@ -8,9 +8,9 @@ public class Money {
     /**
      * This is class representing bank account.
      */
-    protected String cardnumber;
-    protected float money;
-    protected boolean status = false;
+    private String cardnumber;
+    private float money;
+    private boolean status;
 
     public Money(String cardnumber, float money, boolean status) {
         this.cardnumber = cardnumber;

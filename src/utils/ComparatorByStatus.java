@@ -3,6 +3,10 @@ package utils;
 import app.Ticket;
 import java.util.Comparator;
 
+/**
+ *
+ * @author Frantisek Rehak
+ */
 public class ComparatorByStatus implements Comparator<Ticket>{
 
     @Override

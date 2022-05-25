@@ -1,11 +1,13 @@
 package ui;
 
-
 import app.BetCompany;
-
 import java.io.IOException;
 import java.text.ParseException;
 
+/**
+ *
+ * @author Frantisek Rehak
+ */
 public class Main {
 
     public static final String betCompanyName = "Better";

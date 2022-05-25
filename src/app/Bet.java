@@ -3,7 +3,14 @@ package app;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ *
+ * @author Frantisek Rehak
+ */
 public class Bet {
+    /**
+     * This is class representing bet
+     */
     private String homeTeam;
     private String awayTeam;
     private float homeWin;

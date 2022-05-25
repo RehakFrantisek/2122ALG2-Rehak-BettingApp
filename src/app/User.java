@@ -5,14 +5,20 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import utils.FileUtils;
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+/**
+ *
+ * @author Frantisek Rehak
+ */
 public class User {
+    /**
+     * This is class representing User
+     */
     protected String username;
     protected int PID;
     protected String password;
@@ -43,10 +49,18 @@ public class User {
     public String getCardnumber() { return cardnumber; }
 
     public void addMoney(int amount){
+        /**
+         * This method add money to user.
+         * @param amount Added money.
+         */
         this.wallet += amount;
     }
 
     public void removeMoney(int amount){
+        /**
+         * This method remove money from user.
+         * @param amount Taken money.
+         */
         this.wallet -= amount;
     }
 
@@ -66,7 +80,14 @@ public class User {
         return tickets;
     }
 
+    /**
+     * Method loadTickets load a file bets.csv.
+     */
     public void loadTickets(){
+        /**
+         * This method load tickets from homedir file bets.csv.
+         * Adding them to ArrayList tickets.
+         */
         this.tickets.clear();
         String[] rows = FileUtils.readCSV("data//" + this.username + "//bets.csv");
         for(String row : rows){
@@ -79,7 +100,13 @@ public class User {
         }
     }
 
-    public boolean checkDuplicity(Ticket ticket){
+    /* duplicity ticket check */
+    private boolean checkDuplicity(Ticket ticket){
+        /**
+         * This method check if ticket is not already in ArrayList tickets.
+         * @param ticket Ticket what is checked.
+         * @return Return true or false depends if its in or not.
+         */
         for(Ticket ticket1 : this.tickets){
             if(ticket1.equals(ticket)){
                 return true;
@@ -89,6 +116,9 @@ public class User {
     }
 
     public void updateTickets(){
+        /**
+         * This method update tickets from file.
+         */
         String t = "";
         int val = 0;
         int max = this.tickets.size();
@@ -103,13 +133,33 @@ public class User {
         FileUtils.rWFile("data//" + this.username + "//bets.csv", t);
     }
 
-    public Ticket getTicketByIndex(int rowIndex){
-        return this.tickets.get(rowIndex-1);
-    }
 
     public void checkTickets(){
+        /**
+         * This method evaluate all tickets that are outdated, making them win/lose randomly.
+         * All tickets where today date didnt pass ticket's date are ignored.
+         */
         for(Ticket ticket : this.tickets){
             if(ticket.getBet().getDate().compareTo(LocalDate.now()) < 0 && ticket.getStatus().equals("Waiting")){
+                int random = (int)(Math.random() * 49 + 1);
+                if(random % 2 == 0){
+                    ticket.completeTicket(true);
+                    float odd = 0;
+                    if(ticket.getWho() == 1){
+                        odd = ticket.getBet().getHomeWin();
+                    } else if (ticket.getWho() == 2) {
+                        odd = ticket.getBet().getDraw();
+                    }
+                    else{
+                        odd = ticket.getBet().getAwayWin();
+                    }
+                    this.wallet += (odd * ticket.getAmount());
+                }
+                else{
+                    ticket.completeTicket(false);
+                }
+            }
+            else if (ticket.getBet().getDate().compareTo(LocalDate.now()) == 0 && ticket.getBet().getTime().compareTo(LocalTime.now()) < 0 && ticket.getStatus().equals("Waiting")){
                 int random = (int)(Math.random() * 49 + 1);
                 if(random % 2 == 0){
                     ticket.completeTicket(true);
@@ -132,6 +182,13 @@ public class User {
     }
 
     public boolean saveToPdf(String username) {
+        /**
+         * Method saveToPdf saves actual ticket history
+         * to PDF file in their file (data//'username')
+         *
+         * @param username user's tickets that are saved
+         * @return
+         */
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream("data//"+username+"//statistics.pdf"));
@@ -139,6 +196,7 @@ public class User {
             document.open();
             document.add(new Paragraph("Username: " + username));
             document.add(new Paragraph(" "));
+            document.add(new Paragraph(tickets.toString()));
             document.close();
             return true;
 

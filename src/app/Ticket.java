@@ -1,6 +1,13 @@
 package app;
 
+/**
+ *
+ * @author Frantisek Rehak
+ */
 public class Ticket {
+    /**
+     * This is class representing Ticket
+     */
     private Bet bet = null;
     private int who;
 
@@ -31,6 +38,10 @@ public class Ticket {
     }
 
     public void completeTicket(boolean won){
+        /**
+         * This method change status of ticket.
+         * @param won True or false if ticket is win one.
+         */
         if(won) this.status = "Won";
         else this.status = "Lost";
     }

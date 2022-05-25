@@ -1,14 +1,19 @@
 package app;
 
 import utils.FileUtils;
-
 import java.time.*;
 import java.util.ArrayList;
 import java.io.*;
-
 import static utils.FileUtils.readCSV;
 
+/**
+ *
+ * @author Frantisek Rehak
+ */
 public class BetCompany {
+    /**
+     * This is class representing BetCompany
+     */
     public String name;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Bet> availableBets = new ArrayList<>();
@@ -33,11 +38,18 @@ public class BetCompany {
     }
 
     public void addUser(User user) {
+        /**
+         * This method add User to ArrayList users, then it will write all users to file.
+         * @param user User who will be added
+         */
         this.users.add(user);
         FileUtils.appendToFile("data//login.csv",user.toString());
     }
 
     public void bankMoney(){
+        /**
+         * This method write all bank accounts to file.
+         */
         String s = "";
         for(Money money2 : this.money)
         {
@@ -47,6 +59,10 @@ public class BetCompany {
     }
 
     public void updateUsers(){
+        /**
+         * This method write all users to file.
+         *
+         */
         String u = "";
         int val = 0;
         int max = this.users.size();
@@ -62,6 +78,9 @@ public class BetCompany {
     }
 
     public void loadUsers(){
+        /**
+         * This method read all users from file, then add them to ArrayList users.
+         */
         File file = new File("data//login.csv");
         if(file.exists() && file.length() != 0) {
             String[] lines = readCSV("data//login.csv");
@@ -82,6 +101,11 @@ public class BetCompany {
     }
 
     public boolean checkUsername(String username){
+        /**
+         * This method check if username exists in ArrayList users.
+         * @param username Username we are looking for.
+         * @return Return true or false depends if username is found.
+         */
         for(User user : this.users){
             if(user.getUsername().equals(username)){
                 //System.out.println("User exists");
@@ -92,6 +116,12 @@ public class BetCompany {
     }
 
     public boolean checkLogin(String username, String password){
+        /**
+         * This method check if all login parameters are valid.
+         * @param username Username what is checked.
+         * @param password Password what is checked.
+         * @return Return true or false depends if login values are valid.
+         */
         for(User user : this.users){
             if(user.getUsername().equals(username) && user.getPassword().equals(password)){
                 return true;
@@ -101,6 +131,11 @@ public class BetCompany {
     }
 
     public boolean checkCardnumber(String cardnumber){
+        /**
+         * This method check if credit card number is valid.
+         * @param cardnumber Credit card number what is checked.
+         * @return Return true or false depends if credit card number is found.
+         */
         for(User user : this.users){
             if(user.getCardnumber().equals(cardnumber)){
                 return true;
@@ -110,6 +145,11 @@ public class BetCompany {
     }
 
     public User getUserByUsername(String username){
+        /**
+         * This method return user by username.
+         * @param username Username as key when finding user in ArrayList user.
+         * @return return instance of class User.
+         */
         for(User user : this.users){
             if(user.getUsername().equals(username)){
                 return user;
@@ -119,6 +159,9 @@ public class BetCompany {
     }
 
     public void loadBets(){
+        /**
+         * This method read all bets from file, then add them to ArrayList bets.
+         */
         String[] bets = readCSV("betData.csv");
         for(String bet : bets){
             String[] parm = bet.split(";");
@@ -128,6 +171,9 @@ public class BetCompany {
     }
 
     public void loadMoney(){
+        /**
+         * This method read all bank accounts from file, then add them to ArrayList money.
+         */
         String[] moneyS = readCSV("bankAccounts.csv");
         for(String money : moneyS){
             String[] parm = money.split(";");
@@ -137,6 +183,11 @@ public class BetCompany {
     }
 
     public float getMoneyByCardnumber(String cardnumber, String username){
+        /**
+         * This method get money from bank account found by credit car number.
+         * @param cardnumber Credit card number as key when finding user in ArrayList money.
+         * @return Return amount of balance in this bank account.
+         */
         for(Money money1 : this.money){
             if(money1.getcardnumber().equals(cardnumber) && money1.getStatus() == false){
                 money1.setStatus(true);
@@ -146,20 +197,19 @@ public class BetCompany {
         return 0;
     }
 
-    public Money getCardByCardnumber(String cardnumber){
-        for(Money money1 : this.money){
-            if(money1.getcardnumber().equals(cardnumber)){
-                return money1;
-            }
-        }
-        return null;
-    }
-
     public Bet getBetByIndex(int rowNumber){
+        /**
+         * This method get bet by index in ArrayList bets
+         * @param rowNumber Number as index for ArrayList bets
+         * @return Return instance of class Bet
+         */
         return this.availableBets.get(rowNumber-1);
     }
 
     public String toStringBets() {
+        /**
+         * This method print all available bets
+         */
         StringBuilder bs = new StringBuilder();
         int row = 1;
         for (Bet bet: this.availableBets){

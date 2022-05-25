@@ -1,17 +1,19 @@
 package ui;
 
-
 import app.*;
 import utils.ComparatorByStatus;
 import utils.FileUtils;
-
+import java.time.LocalTime;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.*;
 
-
+/**
+ *
+ * @author Frantisek Rehak
+ */
 public class UI {
 
     private User loggedUser = null;
@@ -23,12 +25,14 @@ public class UI {
         this.betCompany = betCompany;
     }
 
+    /* generates main page with name of App */
     public void mainPage(){
         System.out.println();
         System.out.println(this.betCompany.getName());
         System.out.println("- APP -");
     }
 
+    /* intro page with methods to load data */
     public void intro() throws IOException, ParseException {
         FileUtils.createData();
         FileUtils.createFile("login.csv","data");
@@ -66,6 +70,7 @@ public class UI {
         }
     }
 
+    /* callable login menu */
     public void loginMenu(){
         StringBuffer buffer = new StringBuffer();
         Formatter formatter = new Formatter(buffer, Locale.US);
@@ -73,6 +78,7 @@ public class UI {
         System.out.println(formatter);
     }
 
+    /* login with 'username//bets.csv' check */
     public void login(){
         System.out.println();
         System.out.println("Username");
@@ -91,6 +97,7 @@ public class UI {
             this.loggedUser.updateTickets();
             this.betCompany.updateUsers();
         }
+        System.out.println(LocalTime.now());
         letsBet();
     }
 
@@ -104,8 +111,12 @@ public class UI {
         System.out.println("6) logout");
     }
 
+    /* betting menu */
     public void letsBet(){
         while(true) {
+            this.loggedUser.loadTickets();
+            this.loggedUser.checkTickets();
+            this.loggedUser.updateTickets();
             System.out.println();
             System.out.println("Lets BET");
             System.out.println("----------");
@@ -148,6 +159,7 @@ public class UI {
         }
     }
 
+    /* place new ticket menu with methods */
     public void newTicket() {
         System.out.println();
         System.out.println("New Ticket");
@@ -182,6 +194,7 @@ public class UI {
         FileUtils.appendToFile("data//" + this.loggedUser.getUsername() + "//bets.csv", myTicket.toString());
     }
 
+    /* bet history (tickets with status "waiting") */
     public void myTickets(){
         StringBuilder sb = new StringBuilder();
         if(this.loggedUser.getTickets().isEmpty()){
@@ -198,6 +211,7 @@ public class UI {
         }
     }
 
+    /* bet history (tickets with status "!waiting") */
     public void myHistory() {
         StringBuilder sb = new StringBuilder();
         if (this.loggedUser.getTickets().isEmpty()) {
@@ -214,7 +228,7 @@ public class UI {
         }
     }
 
-
+    /* bet history by betted money */
     public void myHistoryByMoney() {
         ArrayList<Ticket> ticketByWin = new ArrayList<>();
         for (Ticket ticket : this.loggedUser.getTickets()){
@@ -236,6 +250,7 @@ public class UI {
         }
     }
 
+    /* bet history by betted money reversed */
     public void myHistoryByLMoney() {
         ArrayList<Ticket> ticketByWin = new ArrayList<>();
         for (Ticket ticket : this.loggedUser.getTickets()){
@@ -257,6 +272,7 @@ public class UI {
         }
     }
 
+    /* register menu */
     public void register(){
         System.out.println("Username");
         String username = sc.next();
@@ -295,7 +311,11 @@ public class UI {
         }
     }
 
+    /* logout menu */
     public void logout(){
+        this.loggedUser.loadTickets();
+        this.loggedUser.checkTickets();
+        this.loggedUser.updateTickets();
         System.out.println();
         System.out.println(loggedUser.getUsername()+ " you are gonna be logged out");
         System.out.println();
@@ -303,6 +323,7 @@ public class UI {
         this.loggedUser = null;
     }
 
+    /* quit menu */
     public void quit() throws IOException, ParseException {
         while(true){
             System.out.println("Are you sure to quit?");

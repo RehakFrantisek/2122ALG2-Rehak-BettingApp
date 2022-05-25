@@ -1,9 +1,15 @@
 package app;
 
+/**
+ *
+ * @author Frantisek Rehak
+ */
 public class Money {
+    /**
+     * This is class representing bank account.
+     */
     protected String cardnumber;
     protected float money;
-
     protected boolean status = false;
 
     public Money(String cardnumber, float money, boolean status) {

@@ -76,7 +76,7 @@ public class User {
          */
         File checkFile = new File("data//"+this.username+"//bets.csv");
         if(checkFile.length() != 0) {
-            this.tickets.clear();
+            //this.tickets.clear();
             String[] rows = FileUtils.readCSV("data//" + this.username + "//bets.csv");
             for (String row : rows) {
                 String[] parms = row.split(";");

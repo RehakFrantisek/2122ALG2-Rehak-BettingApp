@@ -91,6 +91,7 @@ public class UI {
         }
         System.out.println(username+" logged");
         this.loggedUser = betCompany.getUserByUsername(username);
+        /*
         if(FileUtils.doesFileExists("data//" + this.loggedUser.getUsername() + "//bets.csv")){
             this.loggedUser.loadTickets();
             this.loggedUser.checkTickets();
@@ -98,7 +99,7 @@ public class UI {
             this.betCompany.updateUsers();
         }else{
             FileUtils.createFile(this.loggedUser.getUsername()+"//bets.csv","data");
-        }
+        }*/
         System.out.println(LocalTime.now());
         letsBet();
     }
@@ -116,9 +117,9 @@ public class UI {
     /* betting menu */
     private void letsBet(){
         while(true) {
-            this.loggedUser.loadTickets();
-            this.loggedUser.checkTickets();
-            this.loggedUser.updateTickets();
+            //this.loggedUser.loadTickets();
+            //this.loggedUser.checkTickets();
+            //this.loggedUser.updateTickets();
             System.out.println();
             System.out.println("Lets BET");
             System.out.println("----------");
@@ -177,13 +178,38 @@ public class UI {
         System.out.println("----------");
         System.out.println(betCompany.toStringBets());
         System.out.println("Number of match");
-        System.out.println("Your bet ( 1 - homeWin, 2 - draw, 3 - awayWin)");
-        System.out.println("Choose match: ");
-        int matchRow = sc.nextInt();
+        int matchRow;
+        do{
+            System.out.println("Choose match: ");
+            while(!sc.hasNextInt()){
+                System.out.println();
+                System.out.println("Not a number");
+                System.out.println("Choose match: ");
+                sc.next();
+            }
+            matchRow = sc.nextInt();
+        } while (matchRow <= 0 || matchRow >= 9);
         Bet myBet = this.betCompany.getBetByIndex(matchRow);
-        System.out.println("What are you betting at: ");
-        int winnerOption = sc.nextInt();
+        int winnerOption;
+        do{
+            System.out.println("Your bet ( 1 - homeWin, 2 - draw, 3 - awayWin)");
+            System.out.println("What are you betting at: ");
+            while(!sc.hasNextInt()){
+                System.out.println();
+                System.out.println("Not a number");
+                System.out.println("Choose 1-3 (homeWin, draw, awayWin)");
+                System.out.println("What are you betting at: ");
+                sc.next();
+            }
+            winnerOption = sc.nextInt();
+        } while (winnerOption <=0 || winnerOption >=4);
         System.out.println("How much money you want bet: ");
+        while(!sc.hasNextInt()){
+            System.out.println();
+            System.out.println("Not a number");
+            System.out.println("Choose amount of money");
+            sc.next();
+        }
         int moneyOption = sc.nextInt();
         if(loggedUser.getWallet() < moneyOption){
             System.out.println("You tried to bet more then you could");
@@ -194,6 +220,8 @@ public class UI {
         this.loggedUser.removeMoney(moneyOption);
         betCompany.updateUsers();
         FileUtils.appendToFile("data//" + this.loggedUser.getUsername() + "//bets.csv", myTicket.toString());
+        this.loggedUser.checkTickets();
+        this.loggedUser.updateTickets();
     }
 
     /* bet history (tickets with status "waiting") */
@@ -287,6 +315,12 @@ public class UI {
         System.out.println("Password");
         String password = sc.next();
         System.out.println("Personal_ID");
+        while(!sc.hasNextInt()){
+            System.out.println();
+            System.out.println("Not a number");
+            System.out.println("Personal_ID");
+            sc.next();
+        }
         int PID = sc.nextInt();
         System.out.println("Card number");
         String cardnumber = sc.next();
@@ -296,18 +330,25 @@ public class UI {
                 cardnumber = sc.next();
             }
         }
-        System.out.println("CVC code");
+        System.out.println("CVC code (3 digits)");
+        while(!sc.hasNextInt()){
+            System.out.println();
+            System.out.println("Not a 3-digit number");
+            System.out.println("CVC code");
+            sc.next();
+        }
         int cvc = sc.nextInt();
         Pattern pattern = Pattern.compile("^\\d\\d\\d$");
         Matcher matcher = pattern.matcher(Integer.toString(cvc));
         boolean matchFound = matcher.find();
         if(!matchFound) {
-            System.out.println("Wrong input");
+            System.out.println("Wrong input (number doesnt correspond to the 3 digit number)");
+            System.out.println("Try again");
         }
         else{
             float wallet = betCompany.getMoneyByCardnumber(cardnumber, username);
             User reguser = new User(username,password,PID,cardnumber,cvc, wallet);
-            FileUtils.createFolder(username);
+            FileUtils.createFolder("data//"+username);
             this.betCompany.addUser(reguser);
             betCompany.bankMoney();
         }
@@ -315,9 +356,9 @@ public class UI {
 
     /* logout menu */
     private void logout(){
-        this.loggedUser.loadTickets();
-        this.loggedUser.checkTickets();
-        this.loggedUser.updateTickets();
+        //this.loggedUser.loadTickets();
+        //this.loggedUser.checkTickets();
+        //this.loggedUser.updateTickets();
         System.out.println();
         System.out.println(loggedUser.getUsername()+ " you are gonna be logged out");
         System.out.println();
@@ -331,16 +372,27 @@ public class UI {
             System.out.println("Are you sure to quit?");
             System.out.println("0) for quit");
             System.out.println("1) to return to the main page");
-            QuitType option = QuitType.values()[sc.nextInt()];
-            switch(option){
-                case YES:
-                    return;
-                case NO:
-                    intro();
-                    return;
-                default:
-                    System.out.println("Wrong input");
-                    break;
+            while(!sc.hasNextInt()){
+                System.out.println();
+                System.out.println("Wrong input");
+                System.out.println("0) for quit");
+                System.out.println("1) to return to the main page");
+                sc.next();
+            }
+            try{
+                switch(QuitType.values()[sc.nextInt()]){
+                    case YES:
+                        return;
+                    case NO:
+                        intro();
+                        return;
+                    default:
+                        System.out.println("Wrong input");
+                        break;
+                }
+            }catch(Exception e){
+                System.out.println();
+                System.out.println("Wrong input");
             }
         }
     }

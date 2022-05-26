@@ -201,7 +201,7 @@ public class BetCompany implements IBetCompany{
         StringBuilder bs = new StringBuilder();
         int row = 1;
         for (Bet bet: this.availableBets){
-            bs.append(row+") "+bet.toString()).append("\n"+"\n");
+            bs.append(row+") "+bet.toString()).append("\n");
             row++;
         }
         return bs.toString();

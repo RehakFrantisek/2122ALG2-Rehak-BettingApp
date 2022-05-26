@@ -14,7 +14,7 @@ public class FileUtils {
          * This method create folder.
          * @param foldername Folder name being created.
          */
-        File folder = new File("data//"+foldername);
+        File folder = new File(foldername);
         if(!folder.exists()){
             folder.mkdir();
         }
@@ -53,8 +53,8 @@ public class FileUtils {
             FileWriter csvWriter = new FileWriter(filename, true);
             StringBuilder sb = new StringBuilder();
             sb.append(input);
-            sb.append("\n");
             csvWriter.write(sb.toString());
+            sb.append("\n");
             csvWriter.close();
         } catch (IOException e)
         {

@@ -17,10 +17,18 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
 * Přihlášení
     * Nový ticket
         * Vybrat zápas
+        * Vybrat volbu
+        * Vsazené peníze
     * Aktuální tickety
     * Historie sázek
     * Historie dle vsazených peněz
     * Odhlásit
+* Exit
+   * Ano
+   * Zpět do menu
+
+## Zjednodušený class diagram
+![alt text]([http://url/to/img.png](https://github.com/RehakFrantisek/2122ALG2-Rehak-BettingApp/blob/main/BetApp-SimpleDiagram.png))
 
 Projekt **Sazkoveho simulatoru**, který umožňuje přihlášenému 
 uživateli vsadit na sportovní událost, která bude vytvořená 

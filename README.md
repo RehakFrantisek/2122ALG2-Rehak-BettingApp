@@ -32,3 +32,9 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
 
 ## Zjednodušený class diagram
 ![Diagram](https://github.com/RehakFrantisek/2122ALG2-Rehak-BettingApp/blob/main/BettingApp-dia.png)
+
+# Použitá externí knihovna
+[itextPdf](https://github.com/itext/itextpdf)
+
+Přihlášenému uživateli se vygeneruje PDF s aktuální historií tiketů s jejich tipem a vsazenou částkou (vyhodnocených / nevyhodnocených) 
+

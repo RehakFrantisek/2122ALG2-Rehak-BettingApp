@@ -28,7 +28,7 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
    * Zpět do menu
 
 ## Zjednodušený class diagram
-![alt text]([http://url/to/img.png](https://github.com/RehakFrantisek/2122ALG2-Rehak-BettingApp/blob/main/BetApp-SimpleDiagram.png))
+![Diagram](https://github.com/RehakFrantisek/2122ALG2-Rehak-BettingApp/blob/main/BetApp-SimpleDiagram.png)
 
 Projekt **Sazkoveho simulatoru**, který umožňuje přihlášenému 
 uživateli vsadit na sportovní událost, která bude vytvořená 

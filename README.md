@@ -16,7 +16,7 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
     * CVC
 * Přihlášení
     * Nový ticket
-        * 
+        * Vybrat zápas
     * Aktuální tickety
     * Historie sázek
     * Historie dle vsazených peněz

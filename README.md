@@ -5,10 +5,10 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
 
 ## Návrh řešení
 * Hlavní menu
-    * Vytvoření nového účtu
-    * Přihlášení k existujícímu účtu
+    * Vytvořit nový účet
+    * Přihlásit k existujícímu účtu
     * Exit
-* Vytvoření nového účtu
+* Vytvořit nový účet
     * Jméno
     * Heslo
     * PID
@@ -18,9 +18,9 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
     * Nový ticket
         * Vybrat zápas
         * Vybrat volbu
-        * Vsazené peníze
-    * Aktuální tickety
-    * Historie sázek
+        * Vsadit peníze
+    * Aktivní ticket
+    * Historie ticketů
     * Historie dle vsazených peněz
     * Odhlásit
 * Exit
@@ -35,12 +35,15 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
 
 # Použitá externí knihovna
 [itextPdf](https://github.com/itext/itextpdf)
-Knihovna iText pro práci s PDF. Umožňuje vytvořit, zapsat a přečíst data z .pdf formátu.
+Knihovna iText pro práci s PDF. Umožňuje vytvořit, zapsat a přečíst data z '.pdf' formátu.
+V rámci vytváření dokumentu a zápisu dat do něj lze formátovat jak celý dokument, tak také jeho prvky (barva, font, velikost,..).
 
 ## Práce s knihovnou
-Přidání itextpdf.jar do libraries (manuálně - použil jsem plugin Maven v IntelliJ IDEA)
+Přidání itextpdf.jar do libraries (manuálně - použil jsem plugin Maven v IntelliJ IDEA).
 
-Přihlášenému uživateli se vygeneruje PDF s aktuální historií tiketů s jejich tipem a vsazenou částkou (vyhodnocených / nevyhodnocených) 
+Přihlášenému uživateli se vygeneruje PDF s aktuální historií tiketů s jejich tipem a vsazenou částkou (vyhodnocených / nevyhodnocených).
+
+### Ukázka kódu
 ```java
 Document document = new Document();
 PdfWriter.getInstance(document, new FileOutputStream("data//"+username+"//statistics.pdf"));
@@ -51,6 +54,13 @@ document.add(new Paragraph(" "));
 document.add(new Paragraph(tickets.toString()));
 document.close();
 ```
+### Formátování
+```java
+document.setMargins(20, 20, 20, 20);
 
+PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+Table table = new Table(UnitValue.createPercentArray(new float[]{4, 1, 3, 4, 3, 3, 3, 3, 1})).useAllAvailableWidth();
+```
 # Autor
-Autorem projektu je František Řehák pro předmět ALG2.
+Autorem práce je František Řehák pro předmět ALG2.

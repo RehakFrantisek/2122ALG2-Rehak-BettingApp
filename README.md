@@ -14,7 +14,7 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
     * PID
     * číslo karty
     * CVC
-* Přihlášení
+* Přihlásit
     * Nový ticket
         * Vybrat zápas
         * Vybrat volbu

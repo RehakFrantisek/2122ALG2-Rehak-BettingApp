@@ -63,7 +63,7 @@ PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
 PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 Table table = new Table(UnitValue.createPercentArray(new float[]{4, 1, 3, 4, 3, 3, 3, 3, 1})).useAllAvailableWidth();
 ```
-![Zdroj](https://kb.itextpdf.com/home/it7kb/examples/itext-7-jump-start-tutorial-chapter-1)
+[Zdroj](https://kb.itextpdf.com/home/it7kb/examples/itext-7-jump-start-tutorial-chapter-1)
 
 # Autor
 Autorem práce je František Řehák pro předmět ALG2.

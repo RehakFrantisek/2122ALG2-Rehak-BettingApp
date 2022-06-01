@@ -35,6 +35,22 @@ Program slouží k simulaci sázení na fotbalová a hokejová utkání. Uživat
 
 # Použitá externí knihovna
 [itextPdf](https://github.com/itext/itextpdf)
+Knihovna iText pro práci s PDF. Umožňuje vytvořit, zapsat a přečíst data z .pdf formátu.
+
+## Práce s knihovnou
+Přidání itextpdf.jar do libraries (manuálně - použil jsem plugin Maven v IntelliJ IDEA)
 
 Přihlášenému uživateli se vygeneruje PDF s aktuální historií tiketů s jejich tipem a vsazenou částkou (vyhodnocených / nevyhodnocených) 
+```java
+Document document = new Document();
+PdfWriter.getInstance(document, new FileOutputStream("data//"+username+"//statistics.pdf"));
 
+document.open();
+document.add(new Paragraph("Username: " + username));
+document.add(new Paragraph(" "));
+document.add(new Paragraph(tickets.toString()));
+document.close();
+```
+
+# Autor
+Autorem projektu je František Řehák pro předmět ALG2.

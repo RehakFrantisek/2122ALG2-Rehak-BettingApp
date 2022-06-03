@@ -9,6 +9,7 @@ import utils.FileUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class User {
     /**
      * Method loadTickets load a file bets.csv.
      */
-    public void loadTickets(){
+    public void loadTickets() throws FileNotFoundException {
         /**
          * This method load tickets from homedir file bets.csv.
          * Adding them to ArrayList tickets.
@@ -104,7 +105,7 @@ public class User {
         return false;
     }
 
-    public void updateTickets(){
+    public void updateTickets() throws IOException {
         /**
          * This method update tickets from file.
          */

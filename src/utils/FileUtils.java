@@ -29,12 +29,17 @@ public class FileUtils {
          * @param filename File name being created.
          */
         File file = new File(data+"//"+filename);
+        file.createNewFile();
+
+        /*
         if(!file.exists()){
             file.createNewFile();
         }
         else {
             //System.out.println("File login exists");
         }
+
+         */
     }
 
     public static void appendToFile(String filename, String input)
@@ -47,17 +52,17 @@ public class FileUtils {
         try
         {
             File myFile = new File(filename);
-            if(!doesFileExists(filename)){
-                myFile.createNewFile();
-            }
+            doesFileExists(filename);
+            myFile.createNewFile();
             FileWriter csvWriter = new FileWriter(filename, true);
             StringBuilder sb = new StringBuilder();
             sb.append(input);
             csvWriter.write(sb.toString());
             sb.append("\n");
             csvWriter.close();
-        } catch (IOException e)
-        {
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (IOException e){
             System.out.println("Error with writing to " + filename);
             e.printStackTrace();
         }
@@ -68,58 +73,49 @@ public class FileUtils {
      * @param filename
      * @return
      */
-    public static boolean doesFileExists(String filename){
+    public static void doesFileExists(String filename) throws FileNotFoundException{
         /**
          * This method check if file exists
          * @param filename File name of file being checked.
          */
         File myFile = new File(filename);
-        if(!myFile.exists()){
-            return false;
+        if(myFile.exists()){
+            return;
         }
-        return true;
     }
 
-    public static void rWFile(String filename, String input)
-    {
+    public static void createEntryFiles() throws IOException {
+        createFolder("data");
+        createFile("login.csv","data");
+    }
+
+    public static void rWFile(String filename, String input) throws IOException {
         /**
          * This method write data to file.
          * @param filename File name of file where data are write.
          * @param input Data.
          */
-        try
-        {
-            FileWriter csvWriter = new FileWriter(filename, false);
-            StringBuilder sb = new StringBuilder();
-            sb.append(input);
-            sb.append("\n");
-            csvWriter.write(sb.toString());
-            csvWriter.close();
-        } catch (IOException e)
-        {
-            System.out.println("Error with writing to " + filename);
-            e.printStackTrace();
-        }
+        FileWriter csvWriter = new FileWriter(filename, false);
+        StringBuilder sb = new StringBuilder();
+        sb.append(input);
+        sb.append("\n");
+        csvWriter.write(sb.toString());
+        csvWriter.close();
     }
 
-    public static String[] readCSV(String filepath){
+    public static String[] readCSV(String filepath) throws FileNotFoundException{
         /**
          * This method return data from CSV file.
          * @param filepath File path of file being read.
          * @return Return data from file.
          */
         String data = "";
-        try {
             File myObj = new File(filepath);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 data += myReader.nextLine() + "\n";
             }
             myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("readCSV error");
-            e.printStackTrace();
-        }
         return data.split("\n");
     }
 

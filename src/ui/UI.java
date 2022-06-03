@@ -3,12 +3,14 @@ package ui;
 import app.*;
 import utils.ComparatorByStatus;
 import utils.FileUtils;
-import java.time.LocalTime;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.*;
 
 /**
  *
@@ -26,19 +28,37 @@ public class UI {
     }
 
     /* generates main page with name of App */
-    public void mainPage(){
+    public void mainPage() throws IOException {
         System.out.println();
         System.out.println(this.betCompany.getName());
         System.out.println("- APP -");
+        /*
+        try{
+            betCompany.updateUsers();
+        } catch (FileNotFoundException e){
+            System.out.println("File not found");
+            FileUtils.createEntryFiles();
+        }
+        int wait = sc.nextInt();
+         */
     }
 
     /* intro page with methods to load data */
     public void intro() throws IOException, ParseException {
-        FileUtils.createFolder("data");
-        FileUtils.createFile("login.csv","data");
-        betCompany.loadUsers();
-        betCompany.loadMoney();
-        betCompany.loadBets();
+        FileUtils.createEntryFiles();
+        try{
+            FileUtils.doesFileExists("data//login.csv");
+            betCompany.loadUsers();
+            betCompany.loadMoney();
+            betCompany.loadBets();
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("You have to register new user");
+            register();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error");
+        }
+
         //System.out.println(betCompany.toStringBets());
         while(true){
             System.out.println();
@@ -91,17 +111,22 @@ public class UI {
         }
         System.out.println(username+" logged");
         this.loggedUser = betCompany.getUserByUsername(username);
-        /*
-        if(FileUtils.doesFileExists("data//" + this.loggedUser.getUsername() + "//bets.csv")){
+
+        try{
+            FileUtils.doesFileExists("data//" + this.loggedUser.getUsername() + "//bets.csv");
             this.loggedUser.loadTickets();
             this.loggedUser.checkTickets();
             this.loggedUser.updateTickets();
             this.betCompany.updateUsers();
-        }else{
-            FileUtils.createFile(this.loggedUser.getUsername()+"//bets.csv","data");
-        }*/
-        System.out.println(LocalTime.now());
-        letsBet();
+            System.out.println(LocalTime.now());
+            letsBet();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error");
+            return;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("You have to register new user");
+            return;
+        }
     }
 
     private void letsBetMenu(){
@@ -115,7 +140,7 @@ public class UI {
     }
 
     /* betting menu */
-    private void letsBet(){
+    private void letsBet() throws IOException {
         while(true) {
             //this.loggedUser.loadTickets();
             //this.loggedUser.checkTickets();
@@ -147,7 +172,7 @@ public class UI {
                     myHistory();
                     break;
                 case 4:
-                    myHistoryByMoney();
+                    myHistoryByStatus();
                     break;
                 case 5:
                     myHistoryByLMoney();
@@ -163,7 +188,7 @@ public class UI {
     }
 
     /* place new ticket menu with methods */
-    private void newTicket() {
+    private void newTicket() throws IOException {
         System.out.println();
         System.out.println("New Ticket");
         System.out.println("----------");
@@ -204,12 +229,14 @@ public class UI {
             winnerOption = sc.nextInt();
         } while (winnerOption <=0 || winnerOption >=4);
         System.out.println("How much money you want bet: ");
+        /*
         while(!sc.hasNextInt()){
             System.out.println();
             System.out.println("Not a number");
             System.out.println("Choose amount of money");
             sc.next();
         }
+         */
         int moneyOption = sc.nextInt();
         if(loggedUser.getWallet() < moneyOption){
             System.out.println("You tried to bet more then you could");
@@ -218,7 +245,12 @@ public class UI {
         Ticket myTicket = new Ticket(myBet, winnerOption, moneyOption);
         this.loggedUser.addTicket(myTicket);
         this.loggedUser.removeMoney(moneyOption);
-        betCompany.updateUsers();
+        try{
+            betCompany.updateUsers();
+        } catch (FileNotFoundException e){
+            System.out.println("File not found");
+            FileUtils.createEntryFiles();
+        }
         FileUtils.appendToFile("data//" + this.loggedUser.getUsername() + "//bets.csv", myTicket.toString());
         this.loggedUser.checkTickets();
         this.loggedUser.updateTickets();
@@ -258,13 +290,13 @@ public class UI {
         }
     }
 
-    /* bet history by betted money */
-    private void myHistoryByMoney() {
+    /* bet history by status */
+    private void myHistoryByStatus() {
         ArrayList<Ticket> ticketByWin = new ArrayList<>();
         for (Ticket ticket : this.loggedUser.getTickets()){
             ticketByWin.add(ticket);
         }
-        Collections.sort(ticketByWin, new ComparatorByStatus().reversed());
+        Collections.sort(ticketByWin, new ComparatorByStatus());
         StringBuilder sb = new StringBuilder();
         if (this.loggedUser.getTickets().isEmpty()) {
             System.out.println("No bet history");
@@ -275,7 +307,7 @@ public class UI {
                 }
             }
             System.out.println("");
-            System.out.println("My bet history by money (ascending)");
+            System.out.println("My bet history by status");
             System.out.println(sb.toString());
         }
     }
@@ -303,15 +335,18 @@ public class UI {
     }
 
     /* register menu */
-    private void register(){
+    private void register() throws IOException {
         System.out.println("Username");
         String username = sc.next();
+        /*
         if(!betCompany.checkUsername(username)){
             while(!betCompany.checkUsername(username)){
                 System.out.println("Username taken");
                 return;
             }
         }
+
+         */
         System.out.println("Password");
         String password = sc.next();
         System.out.println("Personal_ID");
@@ -387,7 +422,7 @@ public class UI {
                         intro();
                         return;
                     default:
-                        System.out.println("Wrong input");
+                        //System.out.println("Wrong input");
                         break;
                 }
             }catch(Exception e){

@@ -35,7 +35,7 @@ public class BetCompany implements IBetCompany{
         FileUtils.appendToFile("data//login.csv",user.toString());
     }
 
-    public void bankMoney(){
+    public void bankMoney() throws IOException {
         /**
          * This method write all bank accounts to file.
          */
@@ -47,7 +47,7 @@ public class BetCompany implements IBetCompany{
         FileUtils.rWFile("bankAccounts.csv",s);
     }
 
-    public void updateUsers(){
+    public void updateUsers() throws IOException {
         /**
          * This method write all users to file.
          *
@@ -66,27 +66,19 @@ public class BetCompany implements IBetCompany{
         FileUtils.rWFile("data//login.csv",u);
     }
 
-    public void loadUsers(){
+    public void loadUsers() throws FileNotFoundException {
         /**
          * This method read all users from file, then add them to ArrayList users.
          */
-        File file = new File("data//login.csv");
-        if(file.exists() && file.length() != 0) {
-            String[] lines = readCSV("data//login.csv");
-            try {
-                for (String line : lines) {
-                    String[] parm = line.split(";");
-                    User user = new User(parm[0], parm[2], Integer.parseInt(parm[1]), parm[3], Integer.parseInt(parm[4]),Float.parseFloat(parm[5]));
-                    this.users.add(user);
-                }
-            }finally {
-            }
-        }
-        else{
-            System.out.println("login.csv is empty");
-            return;
+        String[] lines = readCSV("data//login.csv");
+        for (String line : lines) {
+            String[] parm = line.split(";");
+            User user = new User(parm[0], parm[2], Integer.parseInt(parm[1]), parm[3], Integer.parseInt(parm[4]),Float.parseFloat(parm[5]));
+            this.users.add(user);
         }
     }
+
+    // TODO vyjimka nepreskocit osetrenim vstupu/neexistence souboru
 
     public boolean checkUsername(String username){
         /**
@@ -146,7 +138,7 @@ public class BetCompany implements IBetCompany{
         return null;
     }
 
-    public void loadBets(){
+    public void loadBets() throws FileNotFoundException {
         /**
          * This method read all bets from file, then add them to ArrayList bets.
          */
@@ -158,7 +150,7 @@ public class BetCompany implements IBetCompany{
         }
     }
 
-    public void loadMoney(){
+    public void loadMoney() throws FileNotFoundException {
         /**
          * This method read all bank accounts from file, then add them to ArrayList money.
          */

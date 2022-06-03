@@ -1,20 +1,23 @@
 package app;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public interface IBetCompany {
 
     public String getName();
 
-    void loadUsers();
+    void loadUsers() throws FileNotFoundException;
 
-    void loadMoney();
+    void loadMoney() throws FileNotFoundException;
 
-    void loadBets();
+    void loadBets() throws FileNotFoundException;
 
     boolean checkLogin(String username, String password);
 
     User getUserByUsername(String username);
 
-    void updateUsers();
+    void updateUsers() throws IOException;
 
     String toStringBets();
 
@@ -28,5 +31,5 @@ public interface IBetCompany {
 
     void addUser(User reguser);
 
-    void bankMoney();
+    void bankMoney() throws IOException;
 }

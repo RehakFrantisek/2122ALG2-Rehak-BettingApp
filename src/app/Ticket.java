@@ -1,5 +1,7 @@
 package app;
 
+import utils.TicketStatus;
+
 /**
  *
  * @author Frantisek Rehak
@@ -12,6 +14,8 @@ public class Ticket {
     private int who;
 
     private int amount;
+
+    private TicketStatus enumStatus;
 
     private String status = "Waiting";
 

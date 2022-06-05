@@ -6,10 +6,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import utils.FileUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -196,6 +193,22 @@ public class User {
             return false;
         }
     }
+
+    public void saveToBinary() throws IOException{
+        try(DataOutputStream out = new DataOutputStream(new FileOutputStream("betsBinary",true))){
+            out.writeInt(tickets.size());
+            out.writeUTF(getUsername());
+            for (Ticket ticket : tickets){
+                out.writeUTF(ticket.getBet().getHomeTeam());
+                out.writeUTF(ticket.getBet().getAwayTeam());
+                out.writeUTF(ticket.getStatus());
+                out.writeInt(ticket.getWho());
+                out.writeInt(ticket.getAmount());
+            }
+        }
+    }
+
+
 
     @Override
     public String toString() {

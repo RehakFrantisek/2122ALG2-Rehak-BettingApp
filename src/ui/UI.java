@@ -43,6 +43,7 @@ public class UI {
          */
     }
 
+
     /* intro page with methods to load data */
     public void intro() throws IOException, ParseException {
         FileUtils.createEntryFiles();
@@ -58,6 +59,7 @@ public class UI {
         } catch (FileNotFoundException e) {
             System.out.println("Error");
         }
+        System.out.println("test");
 
         //System.out.println(betCompany.toStringBets());
         while(true){
@@ -134,7 +136,7 @@ public class UI {
         System.out.println("1) new ticket");
         System.out.println("2) active tickets");
         System.out.println("3) bet history");
-        System.out.println("4) bet history sorted by bet value (ascending)");
+        System.out.println("4) bet history sorted by status (win - draw - lost)");
         System.out.println("5) bet history sorted by bet value (descending)");
         System.out.println("6) logout");
     }
@@ -390,7 +392,7 @@ public class UI {
     }
 
     /* logout menu */
-    private void logout(){
+    private void logout() throws IOException {
         //this.loggedUser.loadTickets();
         //this.loggedUser.checkTickets();
         //this.loggedUser.updateTickets();
@@ -417,6 +419,9 @@ public class UI {
             try{
                 switch(QuitType.values()[sc.nextInt()]){
                     case YES:
+                        System.out.println();
+                        System.out.println("Printing binary data..");
+                        betCompany.getBinaryData();
                         return;
                     case NO:
                         intro();
@@ -426,7 +431,7 @@ public class UI {
                         break;
                 }
             }catch(Exception e){
-                System.out.println();
+                System.out.println(e);
                 System.out.println("Wrong input");
             }
         }

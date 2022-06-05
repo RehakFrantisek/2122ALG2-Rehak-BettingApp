@@ -32,4 +32,6 @@ public interface IBetCompany {
     void addUser(User reguser);
 
     void bankMoney() throws IOException;
+
+    void getBinaryData() throws IOException;
 }

@@ -186,6 +186,52 @@ public class BetCompany implements IBetCompany{
         return this.availableBets.get(rowNumber-1);
     }
 
+    public String readBinaryResults() throws IOException{
+        StringBuilder sb = new StringBuilder();
+        try(DataInputStream in = new DataInputStream(new FileInputStream("betsBinary"))){
+            boolean end = false;
+            int nUsers, nTickets, tip, money, rank;
+            String name, homeTeam, awayTeam, status;
+            nUsers = in.readInt();
+            while(!end){
+                try{
+                    for(int i = 0; i < nUsers; i++){
+                        nTickets = in.readInt();
+                        name = in.readUTF();
+                        sb.append(String.format("\nJmeno: %s%n", name));
+                        sb.append(String.format("Pocet ticketu: "));
+                        sb.append(String.format("%d \n", nTickets));
+                        rank = 1;
+                        for(int j = 0; j < nTickets; j++){
+                            homeTeam = in.readUTF();
+                            awayTeam = in.readUTF();
+                            status = in.readUTF();
+                            tip = in.readInt();
+                            money = in.readInt();
+                            sb.append(String.format("%2d. %s  vs  %s  %s  %d %d %n", rank, homeTeam, awayTeam, status, tip, money));
+                            rank++;
+                        }
+                    }
+                    sb.append("\n");
+                } catch (EOFException e){
+                    end = true;
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    public void getBinaryData() throws IOException {
+        try(DataOutputStream out = new DataOutputStream(new FileOutputStream("betsBinary",false))) {
+            out.writeInt(users.size());
+            for (User user : this.users) {
+                user.loadTickets();
+                user.saveToBinary();
+            }
+            System.out.println(readBinaryResults());
+        }
+    }
+
     public String toStringBets() {
         /**
          * This method print all available bets
